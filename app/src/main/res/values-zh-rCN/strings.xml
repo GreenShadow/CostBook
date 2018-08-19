@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">账本</string>
+    <string name="skip_into">跳过(%1d)</string>
+
+    <string name="title_add_cost_ticket">添加记账</string>
+    <string name="title_home">主页</string>
+    <string name="about">关于</string>
+    <string name="cost_list_empty_notice">没有找到记录</string>
+    <string name="cost_title_hint">标题</string>
+    <string name="cost_total_hint">数量</string>
+    <string name="trading_price_hint">交易价格</string>
+
+    <string name="unit_price">单价</string>
+    <string name="total_price">总价</string>
+    <string name="cost">成本</string>
+    <string name="profit">盈利</string>
+    <string name="currency_info">币信息</string>
+    <string name="cost_title_error">请输入一个标题</string>
+    <string name="cost_total_error">请输入数量</string>
+    <string name="buying_price_error">请输入价格</string>
+    <string name="buy_time_hint">购买时间</string>
+    <string name="number_format_error">不是合法的数字</string>
+    <string name="add_failed">添加失败</string>
+    <string name="add_success">添加成功</string>
+    <string name="cost_note">备注</string>
+    <string name="stored_in_hint">请不要在此输入您的私钥或助记符</string>
+    <string name="save">保存</string>
+    <string name="title_exist">标题 \"%1s\" 已存在</string>
+</resources>

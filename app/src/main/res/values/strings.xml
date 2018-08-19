@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">CostBook</string>
+    <string name="skip_into">Skip (%1d)</string>
+    <string name="about">About</string>
+
+    <string name="cost">Cost</string>
+    <string name="profit">Profit</string>
+
+    <string name="title_add_cost_ticket">Add cost ticket</string>
+    <string name="title_home">Home</string>
+    <string name="cost_list_empty_notice">No records, please create a new cost.</string>
+
+    <string name="currency_info">Currency info</string>
+    <string name="cost_title_hint">Title</string>
+    <string name="cost_title_error">Please input a title</string>
+    <string name="cost_total_hint">Total num</string>
+    <string name="cost_total_error">Please input currency count</string>
+    <string name="trading_price_hint">Trading price</string>
+    <string name="buying_price_error">Please input the buying price</string>
+    <string name="buy_time_hint">Buy time</string>
+    <string name="number_format_error">Not valid number</string>
+
+    <string name="add_failed">Add failed</string>
+    <string name="add_success">Add success</string>
+
+    <string name="unit_price">Unit price</string>
+    <string name="total_price">Total price</string>
+
+    <string name="currency_cny" translatable="false">CNY</string>
+    <string name="currency_btc" translatable="false">BTC</string>
+    <string name="currency_eth" translatable="false">ETH</string>
+    <string name="currency_usdt" translatable="false">USDT</string>
+    <string name="cost_note">Notes</string>
+    <string name="stored_in_hint">DO NOT enter your private key or mnemonic</string>
+    <string name="save">Save</string>
+
+    <string name="title_exist">Title \'%1s\' already exist!</string>
+</resources>
