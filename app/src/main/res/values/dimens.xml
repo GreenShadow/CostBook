@@ -2,4 +2,8 @@
 <resources>
     <dimen name="default_margin">16dp</dimen>
     <dimen name="default_elevation">4dp</dimen>
+
+    <dimen name="boxCornerRadius">4dp</dimen>
+    <dimen name="tiePadding">8dp</dimen>
+    <dimen name="til_height">88dp</dimen>
 </resources>

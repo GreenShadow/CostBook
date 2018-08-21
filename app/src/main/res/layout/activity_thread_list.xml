@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -55,7 +55,7 @@
             android:text="@string/cost_list_empty_notice"
             android:visibility="gone" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_add_record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,6 +69,5 @@
             app:elevation="@dimen/default_elevation"
             app:fabSize="normal"
             app:rippleColor="#FFF" />
-
     </RelativeLayout>
 </LinearLayout>

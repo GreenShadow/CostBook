@@ -9,9 +9,10 @@ import android.database.DatabaseUtils;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class CostListProvider extends ContentProvider {
     private static final String TAG = CostListProvider.class.getSimpleName();

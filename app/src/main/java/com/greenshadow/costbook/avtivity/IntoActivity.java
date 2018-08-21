@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.greenshadow.costbook.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class IntoActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = IntoActivity.class.getSimpleName();

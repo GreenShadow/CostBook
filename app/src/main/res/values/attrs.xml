@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="IconInputTextLayout">
+        <attr name="icon" format="reference" />
+        <attr name="hint" format="string" />
+    </declare-styleable>
+    <item name="IconInputTextLayout_icon_id" type="id" />
+    <item name="IconInputTextLayout_til_id" type="id" />
+</resources>
