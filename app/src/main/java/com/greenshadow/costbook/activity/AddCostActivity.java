@@ -1,22 +1,26 @@
-package com.greenshadow.costbook.avtivity;
+package com.greenshadow.costbook.activity;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.greenshadow.costbook.R;
 import com.greenshadow.costbook.provider.Constants;
+import com.greenshadow.costbook.view.IconInputTextLayout;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -33,13 +37,13 @@ public class AddCostActivity extends AppCompatActivity {
     private static final int MENU_SAVE = 100;
 
     private Toolbar mToolBar;
-    private TextInputLayout mTitleView;
-    private TextInputLayout mTotalView;
-    private TextInputLayout mPriceView;
-    private TextInputLayout mBuyTimeView;
+    private IconInputTextLayout mTitleView;
+    private IconInputTextLayout mTotalView;
+    private IconInputTextLayout mPriceView;
+    private IconInputTextLayout mBuyTimeView;
     private Spinner mPriceTypeView;
     private Spinner mCurrencyTypeView;
-    private EditText mNoteView;
+    private IconInputTextLayout mNoteView;
 
     private String mTitle, mBuyTime, mNote;
     private BigDecimal mTotal, mPrice;
@@ -64,7 +68,7 @@ public class AddCostActivity extends AppCompatActivity {
         mBuyTimeView = findViewById(R.id.til_cost_buy_time);
         mPriceTypeView = findViewById(R.id.spinner_price_type);
         mCurrencyTypeView = findViewById(R.id.spinner_price_currency_type);
-        mNoteView = findViewById(R.id.et_cost_note);
+        mNoteView = findViewById(R.id.cost_note);
         setupInputs();
 
         setResult(RESULT_CANCELED);
@@ -93,8 +97,7 @@ public class AddCostActivity extends AppCompatActivity {
             enterNormalMode();
         }
 
-        mBuyTimeView.setOnClickListener(v -> showDatePickerDialog());
-        mBuyTimeView.getEditText().setOnClickListener(v -> mBuyTimeView.callOnClick());
+        mBuyTimeView.getEditText().setOnClickListener(v -> showDatePickerDialog());
     }
 
     private void enterRecordMode() {
@@ -107,7 +110,6 @@ public class AddCostActivity extends AppCompatActivity {
                 return;
             }
 
-            mTitleView.setHintAnimationEnabled(false);
             mTitleView.getEditText().setText(mTitle);
             mTitleView.setEnabled(false);
 
@@ -128,7 +130,6 @@ public class AddCostActivity extends AppCompatActivity {
     }
 
     private void enterNormalMode() {
-        mTitleView.setHintAnimationEnabled(true);
         mTitleView.setEnabled(true);
         mTitleView.getEditText().getText().clear();
         mCurrencyTypeView.setEnabled(true);
@@ -141,13 +142,13 @@ public class AddCostActivity extends AppCompatActivity {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
             mDialog = new DatePickerDialog(AddCostActivity.this,
-                    android.R.style.Theme_Material_Dialog,
+                    R.style.AppTheme_DatePickerDialog,
                     (view, year, month, dayOfMonth) -> {
                         String selectedDate = year + "/" + month + "/" + dayOfMonth;
                         mBuyTimeView.getEditText().setText(selectedDate);
                     },
                     calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.MONTH) + 1,
                     calendar.get(Calendar.DAY_OF_MONTH));
             mDialog.setCanceledOnTouchOutside(false);
         } else if (mDialog.isShowing()) {
@@ -179,6 +180,12 @@ public class AddCostActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.d(TAG, newConfig.toString());
     }
 
     private void clearErrors() {
@@ -235,7 +242,7 @@ public class AddCostActivity extends AppCompatActivity {
     private boolean checkTitle() {
         try (Cursor c = getContentResolver().query(
                 Uri.withAppendedPath(Constants.CostList.THREAD_URI, mTitle),
-                new String[]{Constants.CostList._COUNT}, null, null, null)) {
+                new String[]{ Constants.CostList._COUNT }, null, null, null)) {
             if (c == null || c.getCount() <= 0 || !c.moveToFirst()) {
                 Log.e(TAG, "checkTitle : invalid cursor : " + c);
                 return false;

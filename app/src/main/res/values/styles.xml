@@ -10,10 +10,14 @@
         <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
-    <style name="AppTheme.TextInput" parent="android:TextAppearance.DeviceDefault.Medium">
+    <style name="AppTheme.TextInput" parent="AppTheme">
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="android:textColorHint">#888</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:cursorVisible">true</item>
+    </style>
+
+    <style name="AppTheme.DatePickerDialog" parent="android:Theme.Material.Dialog">
+        <item name="colorAccent">@android:color/transparent</item>
     </style>
 </resources>

@@ -23,181 +23,106 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:background="#CCC"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:text="@string/currency_info" />
+            android:orientation="vertical"
+            android:padding="8dp">
 
             <com.greenshadow.costbook.view.IconInputTextLayout
+                android:id="@+id/til_cost_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/til_cost_total"
+                android:paddingBottom="8dp"
                 android:theme="@style/AppTheme.TextInput"
+                app:error="@string/cost_title_error"
                 app:hint="@string/cost_title_hint"
-                app:icon="@drawable/ic_info" />
+                app:input_type="text"
+                app:leading_icon="@drawable/ic_info" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="4dp"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:padding="8dp"
-                    android:src="@drawable/ic_info" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_cost_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:hint="@string/cost_title_hint"
-                    android:theme="@style/AppTheme.TextInput"
-                    app:boxBackgroundColor="@color/input_field_boxBackgroundColor"
-                    app:boxBackgroundMode="filled"
-                    app:boxCornerRadiusTopEnd="4dp"
-                    app:boxCornerRadiusTopStart="4dp"
-                    app:boxStrokeWidth="2dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:padding="8dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </RelativeLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
+            <com.greenshadow.costbook.view.IconInputTextLayout
                 android:id="@+id/til_cost_total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:gravity="center_horizontal"
-                android:hint="@string/cost_total_hint"
+                android:paddingBottom="8dp"
                 android:theme="@style/AppTheme.TextInput"
-                app:boxBackgroundColor="@color/input_field_boxBackgroundColor"
-                app:boxBackgroundMode="filled"
-                app:boxCornerRadiusTopEnd="4dp"
-                app:boxCornerRadiusTopStart="4dp"
-                app:boxStrokeWidth="2dp">
+                app:error="@string/cost_total_error"
+                app:hint="@string/cost_total_hint"
+                app:input_type="numberDecimal"
+                app:leading_icon="@drawable/ic_number" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="8dp"
-                    android:drawableStart="@drawable/ic_number"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:padding="8dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
+            <com.greenshadow.costbook.view.IconInputTextLayout
                 android:id="@+id/til_cost_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:gravity="center_horizontal"
-                android:hint="@string/trading_price_hint"
+                android:paddingBottom="8dp"
                 android:theme="@style/AppTheme.TextInput"
-                app:boxBackgroundColor="@color/input_field_boxBackgroundColor"
-                app:boxBackgroundMode="filled"
-                app:boxCornerRadiusTopEnd="4dp"
-                app:boxCornerRadiusTopStart="4dp"
-                app:boxStrokeWidth="2dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="8dp"
-                    android:drawableStart="@drawable/ic_buy"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:padding="8dp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                app:hint="@string/trading_price_hint"
+                app:input_type="number"
+                app:leading_icon="@drawable/ic_buy" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
                 android:gravity="center_horizontal"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingBottom="29dp">
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/spinner_price_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/buying_price_type_spinner" />
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input_container">
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/spinner_price_currency_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/buying_price_currency_spinner" />
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/spinner_price_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:entries="@array/buying_price_type_spinner"
+                        android:gravity="center" />
+                </RelativeLayout>
+
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_input_container">
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/spinner_price_currency_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:entries="@array/buying_price_currency_spinner"
+                        android:gravity="center" />
+                </RelativeLayout>
             </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.greenshadow.costbook.view.IconInputTextLayout
                 android:id="@+id/til_cost_buy_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:gravity="center_horizontal"
-                android:hint="@string/buy_time_hint"
+                android:descendantFocusability="blocksDescendants"
+                android:paddingBottom="8dp"
                 android:theme="@style/AppTheme.TextInput"
-                app:boxBackgroundColor="@color/input_field_boxBackgroundColor"
-                app:boxBackgroundMode="filled"
-                app:boxCornerRadiusTopEnd="4dp"
-                app:boxCornerRadiusTopStart="4dp"
-                app:boxStrokeWidth="2dp">
+                app:hint="@string/buy_time_hint"
+                app:input_type="date"
+                app:leading_icon="@drawable/ic_time" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:drawablePadding="8dp"
-                    android:drawableStart="@drawable/ic_time"
-                    android:focusable="false"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:padding="8dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:background="#CCC"
-                android:gravity="center_vertical"
-                android:padding="8dp"
-                android:text="@string/cost_note" />
-
-            <EditText
-                android:id="@+id/et_cost_note"
+            <com.greenshadow.costbook.view.IconInputTextLayout
+                android:id="@+id/cost_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/stored_in_hint"
-                android:inputType="text"
-                android:minLines="4"
-                android:padding="8dp"
-                android:textSize="20sp"
-                android:theme="@style/AppTheme.TextInput" />
+                android:paddingBottom="8dp"
+                android:theme="@style/AppTheme.TextInput"
+                app:hint="@string/cost_note"
+                app:input_type="text"
+                app:leading_icon="@drawable/ic_note"
+                app:note="@string/stored_in_hint" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.greenshadow.costbook.avtivity;
+package com.greenshadow.costbook.activity;
 
 import android.content.Intent;
 import android.database.Cursor;

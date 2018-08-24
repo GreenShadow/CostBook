@@ -1,25 +1,47 @@
 package com.greenshadow.costbook.view;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.text.InputType;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.Gravity;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.animation.AnimationUtils;
 import com.greenshadow.costbook.R;
 
 public class IconInputTextLayout extends RelativeLayout {
-    private ImageView mIconView;
-    private TextInputLayout mTil;
+    private boolean mIsError = false;
+    private boolean mIsExpanded = false;
+    private boolean mIsLabelAnimateEnabled = true;
+
+    private String mLabelText;
+    private String mNoteText;
+    private String mErrorText;
+
+    private float mLabelTranslationY;
+
+    private ImageView mLeadingIcon;
+    private RelativeLayout mInputContainer;
+    private TextSizeAnimateTextView mLabel;
+    private EditText mInput;
+    private ImageView mTrailingIcon;
+    private TextView mAssistLabel;
+
+    private InputMethodManager mImm;
 
     public IconInputTextLayout(Context context) {
         this(context, null);
@@ -35,66 +57,51 @@ public class IconInputTextLayout extends RelativeLayout {
 
     public IconInputTextLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        mImm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         init(context, attrs);
+        registerListeners();
+        updateLabels();
     }
 
     private void init(Context context, AttributeSet attrs) {
-        LayoutParams lp;
+        LayoutInflater.from(context).inflate(R.layout.view_input, this, true);
 
-        mIconView = new ImageView(context);
-        mIconView.setId(R.id.IconInputTextLayout_icon_id);
-        mIconView.setPadding(
-                getResources().getDimensionPixelSize(R.dimen.tiePadding),
-                getResources().getDimensionPixelSize(R.dimen.tiePadding),
-                getResources().getDimensionPixelSize(R.dimen.tiePadding),
-                getResources().getDimensionPixelSize(R.dimen.tiePadding)
-        );
-        lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        lp.addRule(ALIGN_PARENT_START);
-        lp.addRule(CENTER_VERTICAL);
-        mIconView.setLayoutParams(lp);
+        mLeadingIcon = findViewById(R.id.leading_icon);
+        mInputContainer = findViewById(R.id.input_container);
+        mLabel = findViewById(R.id.label);
+        mInput = findViewById(R.id.input);
+        mTrailingIcon = findViewById(R.id.trailing_icon);
+        mAssistLabel = findViewById(R.id.assist_label);
 
-        mTil = new TextInputLayout(context);
-        mTil.setId(R.id.IconInputTextLayout_til_id);
-        mTil.setGravity(Gravity.CENTER);
-        mTil.setBackgroundColor(getResources().getColor(R.color.input_field_boxBackgroundColor));
-        mTil.setBackground(getResources().getDrawable(R.drawable.bg_input));
-//        mTil.setBoxBackgroundColor(getResources().getColor(R.color.input_field_boxBackgroundColor));
-        mTil.setBoxBackgroundMode(TextInputLayout.BOX_BACKGROUND_NONE);
-        mTil.setBoxCornerRadii(
-                getResources().getDimension(R.dimen.boxCornerRadius),
-                getResources().getDimension(R.dimen.boxCornerRadius),
-                0,
-                0
-        );
-        TextInputEditText tie = new TextInputEditText(context);
-        tie.setInputType(InputType.TYPE_CLASS_TEXT);
-        tie.setMaxLines(1);
-        tie.setPadding(
-                getResources().getDimensionPixelSize(R.dimen.tiePadding),
-                getResources().getDimensionPixelSize(R.dimen.tiePadding),
-                getResources().getDimensionPixelSize(R.dimen.tiePadding),
-                getResources().getDimensionPixelSize(R.dimen.tiePadding)
-        );
-        tie.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        mTil.addView(tie);
-        lp = new LayoutParams(LayoutParams.MATCH_PARENT,
-                getResources().getDimensionPixelOffset(R.dimen.til_height));
-        lp.addRule(END_OF, R.id.IconInputTextLayout_icon_id);
-        mTil.setLayoutParams(lp);
-
-        addView(mIconView);
-        addView(mTil);
+        mInput.setVisibility(GONE);
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.IconInputTextLayout);
-        Drawable icon = ta.getDrawable(R.styleable.IconInputTextLayout_icon);
-        if (icon != null) {
-            mIconView.setImageDrawable(icon);
+
+        Drawable leadingIcon = ta.getDrawable(R.styleable.IconInputTextLayout_leading_icon);
+        if (leadingIcon != null) {
+            mLeadingIcon.setVisibility(VISIBLE);
+            mLeadingIcon.setImageDrawable(leadingIcon);
+        } else {
+            mLeadingIcon.setVisibility(GONE);
         }
-        String hint = ta.getString(R.styleable.IconInputTextLayout_hint);
-        if (!TextUtils.isEmpty(hint)) {
-            mTil.setHint(hint);
+
+        Drawable trailingIcon = ta.getDrawable(R.styleable.IconInputTextLayout_trailing_icon);
+        if (trailingIcon != null) {
+            mTrailingIcon.setVisibility(VISIBLE);
+            mTrailingIcon.setImageDrawable(trailingIcon);
+        } else {
+            mTrailingIcon.setVisibility(GONE);
         }
+
+        int inputType = ta.getInt(R.styleable.IconInputTextLayout_input_type, EditorInfo.TYPE_NULL);
+        mInput.setInputType(inputType);
+
+        mIsLabelAnimateEnabled = ta.getBoolean(R.styleable.IconInputTextLayout_label_animate_enabled, true);
+
+        mLabelText = ta.getString(R.styleable.IconInputTextLayout_hint);
+        mNoteText = ta.getString(R.styleable.IconInputTextLayout_note);
+        mErrorText = ta.getString(R.styleable.IconInputTextLayout_error);
+
         ta.recycle();
     }
 
@@ -102,15 +109,189 @@ public class IconInputTextLayout extends RelativeLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
-        View inputFrame = mTil.getChildAt(0);
-        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) inputFrame.getLayoutParams();
-        lp.bottomMargin = lp.topMargin;
-        inputFrame.setLayoutParams(lp);
+        if (changed) {
+            int containerHeight = mInputContainer.getHeight();
+            int labelHeight = findViewById(R.id.label_frame).getHeight();
+            float inputHeight = mInput.getTextSize();
+            mLabelTranslationY = (containerHeight - labelHeight - inputHeight) / 2 + 3;
+        }
+    }
 
-        mIconView.setTop(inputFrame.getTop());
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        if (!hasWindowFocus) {
+            clearFocus();
+            post(this::hideIm);
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mInput.setVisibility(VISIBLE);
+        mInput.requestFocus();
+        return mInput.onTouchEvent(event);
+    }
+
+    private void registerListeners() {
+        mInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                boolean hasContent = s.length() != 0;
+
+                if (hasContent) {
+                    mInput.setVisibility(VISIBLE);
+                } else {
+                    mInput.setVisibility(GONE);
+                }
+                expandCollapseLabel(hasContent, getWindowVisibility() == VISIBLE);
+            }
+        });
+
+        mInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                mInput.setVisibility(VISIBLE);
+            } else {
+                if (mInput.getText().toString().isEmpty()) {
+                    mInput.setVisibility(GONE);
+                }
+            }
+            expandCollapseLabel(hasFocus);
+
+            mInputContainer.setSelected(hasFocus);
+        });
+
+        mInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                mInput.clearFocus();
+                hideIm();
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void hideIm() {
+        mImm.hideSoftInputFromWindow(mInput.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    private void updateLabels() {
+        mLabel.setText(mLabelText);
+        mAssistLabel.setText(mNoteText);
+    }
+
+    private void expandCollapseLabel(boolean expand) {
+        expandCollapseLabel(expand, mIsLabelAnimateEnabled);
+    }
+
+    private void expandCollapseLabel(boolean expand, boolean animate) {
+        if (expand == mIsExpanded) {
+            return;
+        }
+
+        if (!TextUtils.isEmpty(getText()) && !expand) {
+            return;
+        }
+
+        post(() -> {
+            mIsExpanded = expand;
+
+            if (animate) {
+                ObjectAnimator positionAnimator;
+                ObjectAnimator textSizeAnimator;
+                ObjectAnimator textColorAnimator;
+                if (expand) {
+                    positionAnimator = ObjectAnimator.ofFloat(mLabel, "translationY", mLabelTranslationY * -1);
+                    textSizeAnimator = ObjectAnimator.ofFloat(mLabel, "CurrentTextSize", 14);
+                    textColorAnimator = ObjectAnimator.ofArgb(mLabel, "textColor",
+                            getThemeColor(R.attr.colorAccent));
+                } else {
+                    positionAnimator = ObjectAnimator.ofFloat(mLabel, "translationY", 0);
+                    textSizeAnimator = ObjectAnimator.ofFloat(mLabel, "CurrentTextSize",
+                            mInput.getTextSize() / getResources().getDisplayMetrics().density);
+                    textColorAnimator = ObjectAnimator.ofArgb(mLabel, "textColor",
+                            getContext().getResources().getColor(R.color.colorLabel));
+                }
+
+                AnimatorSet as = new AnimatorSet();
+                as.setDuration(300);
+                as.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
+                as.playTogether(positionAnimator, textSizeAnimator, textColorAnimator);
+                as.start();
+            } else {
+                if (expand) {
+                    mLabel.setTranslationY(mLabelTranslationY * -1);
+                    mLabel.setCurrentTextSize(14);
+                    mLabel.setTextColor(getThemeColor(R.attr.colorAccent));
+                } else {
+                    mLabel.setTranslationY(0);
+                    mLabel.setCurrentTextSize(mInput.getTextSize() / getResources().getDisplayMetrics().density);
+                    mLabel.setTextColor(getContext().getResources().getColor(R.color.colorLabel));
+                }
+            }
+        });
+    }
+
+    private int getThemeColor(int id) {
+        TypedValue tv = new TypedValue();
+        getContext().getTheme().resolveAttribute(id, tv, true);
+        return tv.data;
+    }
+
+    public void setLabelAnimateEnabled(boolean enabled) {
+        mIsLabelAnimateEnabled = enabled;
+    }
+
+    public void setError(String errorText) {
+        mErrorText = errorText;
+        mIsError = !TextUtils.isEmpty(errorText);
+
+        if (mIsError) {
+            if (!TextUtils.isEmpty(mErrorText)) {
+                mAssistLabel.setVisibility(VISIBLE);
+                mAssistLabel.setTextColor(getThemeColor(R.attr.colorError));
+                mAssistLabel.setText(mErrorText);
+            }
+            mInputContainer.setBackgroundResource(R.drawable.line_error);
+        } else {
+            if (!TextUtils.isEmpty(mNoteText)) {
+                mAssistLabel.setVisibility(VISIBLE);
+                mAssistLabel.setTextColor(getThemeColor(R.attr.colorControlNormal));
+            }
+            mInputContainer.setBackgroundResource(R.drawable.bg_input_container);
+        }
+    }
+
+    public boolean isError() {
+        return mIsError;
+    }
+
+    public void setTrailingIconClickListener(View.OnClickListener l) {
+        if (mTrailingIcon.getVisibility() == VISIBLE && l != null) {
+            mTrailingIcon.setOnClickListener(l);
+        }
     }
 
     public String getText() {
-        return mTil.getEditText().getText().toString();
+        return mInput.getText().toString();
+    }
+
+    public EditText getEditText() {
+        return mInput;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        mInput.setEnabled(enabled);
+        mInputContainer.setEnabled(enabled);
     }
 }

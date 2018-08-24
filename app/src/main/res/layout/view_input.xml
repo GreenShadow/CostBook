@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="android.widget.RelativeLayout">
+
+    <ImageView
+        android:id="@+id/leading_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_alignParentStart="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:padding="12dp"
+        android:tint="?attr/colorAccent"
+        tools:src="@drawable/ic_buy" />
+
+    <RelativeLayout
+        android:id="@+id/input_container"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_toEndOf="@+id/leading_icon"
+        android:background="@drawable/bg_input_container">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/trailing_icon"
+            android:paddingEnd="12dp"
+            android:paddingStart="12dp">
+
+            <com.greenshadow.costbook.view.TextSizeAnimateTextView
+                android:id="@+id/label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:focusable="false"
+                android:textColor="@color/colorLabel"
+                android:textSize="18sp"
+                tools:text="Rj" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:animateLayoutChanges="true">
+
+                <TextView
+                    android:id="@+id/label_frame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:textColor="@android:color/transparent"
+                    android:textSize="12sp"
+                    android:visibility="invisible"
+                    tools:text="Rj" />
+
+                <EditText
+                    android:id="@+id/input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/label_frame"
+                    android:background="@null"
+                    android:gravity="start"
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    android:textAppearance="@android:style/TextAppearance"
+                    android:textSize="18sp"
+                    tools:text="Rj"
+                    tools:visibility="visible" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/trailing_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="12dp"
+            tools:src="@drawable/ic_info" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/assist_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/input_container"
+        android:layout_below="@+id/input_container"
+        android:paddingEnd="12dp"
+        android:paddingStart="12dp"
+        android:textColor="@color/colorLabel"
+        android:textSize="13sp"
+        tools:text="note" />
+</merge>

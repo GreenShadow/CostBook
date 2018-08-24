@@ -1,4 +1,4 @@
-package com.greenshadow.costbook.avtivity;
+package com.greenshadow.costbook.activity;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -122,6 +122,7 @@ public class HomeActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.fab_add_cost:
                 startActivity(new Intent(this, AddCostActivity.class));
+//                startActivity(new Intent(this, TestActivity.class));
                 break;
             default:
                 break;

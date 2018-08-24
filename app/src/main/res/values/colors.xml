@@ -3,5 +3,6 @@
     <color name="colorPrimary">#ed6cab</color>
     <color name="colorPrimaryDark">#ed6cab</color>
     <color name="colorAccent">#FFF</color>
+    <color name="colorLabel">#FF777777</color>
     <color name="input_field_boxBackgroundColor">#EEE</color>
 </resources>

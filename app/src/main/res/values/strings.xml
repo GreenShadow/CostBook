@@ -10,7 +10,6 @@
     <string name="title_home">Home</string>
     <string name="cost_list_empty_notice">No records, please create a new cost.</string>
 
-    <string name="currency_info">Currency info</string>
     <string name="cost_title_hint">Title</string>
     <string name="cost_title_error">Please input a title</string>
     <string name="cost_total_hint">Total num</string>
@@ -31,7 +30,7 @@
     <string name="currency_eth" translatable="false">ETH</string>
     <string name="currency_usdt" translatable="false">USDT</string>
     <string name="cost_note">Notes</string>
-    <string name="stored_in_hint">DO NOT enter your private key or mnemonic</string>
+    <string name="stored_in_hint">*DO NOT enter your private key or mnemonic</string>
     <string name="save">Save</string>
 
     <string name="title_exist">Title \'%1s\' already exist!</string>

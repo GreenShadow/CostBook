@@ -15,10 +15,11 @@
         android:id="@+id/into_skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_skip_into"
         android:gravity="center"
         android:text="@string/skip_into"
         android:textAllCaps="false"
-        android:layout_gravity="top|end"
-        android:layout_margin="16dp"
-        android:background="@drawable/bg_skip_into" />
+        android:textColor="@android:color/black" />
 </FrameLayout>

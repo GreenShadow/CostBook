@@ -15,7 +15,6 @@
     <string name="total_price">总价</string>
     <string name="cost">成本</string>
     <string name="profit">盈利</string>
-    <string name="currency_info">币信息</string>
     <string name="cost_title_error">请输入一个标题</string>
     <string name="cost_total_error">请输入数量</string>
     <string name="buying_price_error">请输入价格</string>
@@ -24,7 +23,7 @@
     <string name="add_failed">添加失败</string>
     <string name="add_success">添加成功</string>
     <string name="cost_note">备注</string>
-    <string name="stored_in_hint">请不要在此输入您的私钥或助记符</string>
+    <string name="stored_in_hint">*请不要在此输入您的私钥或助记符</string>
     <string name="save">保存</string>
     <string name="title_exist">标题 \"%1s\" 已存在</string>
 </resources>

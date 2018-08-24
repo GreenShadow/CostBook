@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".avtivity.IntoActivity"
+            android:name=".activity.IntoActivity"
             android:theme="@style/AppTheme.Into">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,11 +18,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".avtivity.HomeActivity" />
+        <activity android:name=".activity.HomeActivity" />
 
-        <activity android:name=".avtivity.AddCostActivity" />
+        <activity
+            android:name=".activity.AddCostActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
-        <activity android:name=".avtivity.ThreadListActivity" />
+        <activity android:name=".activity.ThreadListActivity" />
+
+        <activity android:name=".activity.TestActivity" />
 
         <provider
             android:name=".provider.CostListProvider"
