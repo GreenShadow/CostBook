@@ -7,6 +7,10 @@
     <string name="title_home">主页</string>
     <string name="about">关于</string>
     <string name="cost_list_empty_notice">没有找到记录</string>
+    <string name="are_you_sure">您确定吗？</string>
+    <string name="delete_content">将要删除 \"%1s\"</string>
+    <string name="delete_record">将要删除这条记录</string>
+
     <string name="cost_title_hint">标题</string>
     <string name="cost_total_hint">数量</string>
     <string name="trading_price_hint">交易价格</string>
@@ -26,4 +30,7 @@
     <string name="stored_in_hint">*请不要在此输入您的私钥或助记符</string>
     <string name="save">保存</string>
     <string name="title_exist">标题 \"%1s\" 已存在</string>
+
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
 </resources>

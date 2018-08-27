@@ -5,17 +5,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.greenshadow.costbook.R;
+import com.greenshadow.costbook.utils.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class IntoActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = IntoActivity.class.getSimpleName();
-
     private static final int WHAT_DEC = 1;
     private static final int WHAT_SKIP = 0;
 
@@ -27,7 +25,7 @@ public class IntoActivity extends AppCompatActivity implements View.OnClickListe
             switch (msg.what) {
                 case WHAT_DEC:
                     if (isFinishing()) {
-                        Log.d(TAG, "Activity finishing, skip.");
+                        Log.d(this, "Activity finishing, skip.");
                         return;
                     }
 
@@ -45,7 +43,7 @@ public class IntoActivity extends AppCompatActivity implements View.OnClickListe
                     jumpToHome();
                     break;
                 default:
-                    Log.w(TAG, "Unknown message : " + msg.toString());
+                    Log.w(this, "Unknown message : " + msg.toString());
                     break;
             }
         }
@@ -80,7 +78,7 @@ public class IntoActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        Log.w(TAG, "Unknown view : " + v);
+        Log.w(this, "Unknown view : " + v);
     }
 
     private void jumpToHome() {

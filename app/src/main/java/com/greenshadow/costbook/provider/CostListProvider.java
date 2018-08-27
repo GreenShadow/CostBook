@@ -9,14 +9,13 @@ import android.database.DatabaseUtils;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class CostListProvider extends ContentProvider {
-    private static final String TAG = CostListProvider.class.getSimpleName();
+import com.greenshadow.costbook.utils.Log;
 
+public class CostListProvider extends ContentProvider {
     private static final int TRACKS = 0;
     private static final int THREAD = 1;
     private static final int THREAD_LIST = 2;
@@ -52,13 +51,14 @@ public class CostListProvider extends ContentProvider {
                 break;
             case THREAD_LIST:
                 selection = Constants.CostList.TITLE + "=?";
-                selectionArgs = new String[]{uri.getLastPathSegment()};
+                selectionArgs = new String[]{ uri.getLastPathSegment() };
                 break;
             case RECORD:
-                selection = Constants.CostList._ID;
+                selection = Constants.CostList._ID + "=?";
+                selectionArgs = new String[]{ uri.getLastPathSegment() };
                 break;
             default:
-                Log.w(TAG, "query : Unknown uri : " + uri.toString());
+                Log.w(this, "query : Unknown uri : " + uri.toString());
                 return null;
         }
 
@@ -66,8 +66,8 @@ public class CostListProvider extends ContentProvider {
                 && BaseColumns._COUNT.equals(projection[0])) {
             long count = DatabaseUtils.queryNumEntries(mDbHelper.getReadableDatabase(),
                     Constants.TABLE_COST, selection, selectionArgs);
-            MatrixCursor cursor = new MatrixCursor(new String[]{"COUNT(*)"});
-            cursor.addRow(new String[]{String.valueOf(count)});
+            MatrixCursor cursor = new MatrixCursor(new String[]{ "COUNT(*)" });
+            cursor.addRow(new String[]{ String.valueOf(count) });
             return cursor;
         }
 
@@ -79,13 +79,13 @@ public class CostListProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         if (sUriMatcher.match(uri) < 0) {
-            Log.e(TAG, "insert : Unknown uri : " + uri.toString());
+            Log.e(this, "insert : Unknown uri : " + uri.toString());
             return null;
         }
 
         long id = mDbHelper.getWritableDatabase().insert(Constants.TABLE_COST, null, values);
         if (id < 0) {
-            Log.e(TAG, "insert : insert error, values = " + values);
+            Log.e(this, "insert : insert error, values = " + values);
             return null;
         }
 
@@ -98,15 +98,15 @@ public class CostListProvider extends ContentProvider {
         switch (match) {
             case THREAD_LIST:
                 selection = Constants.CostList.TITLE + "=?";
-                selectionArgs = new String[]{uri.getLastPathSegment()};
+                selectionArgs = new String[]{ uri.getLastPathSegment() };
                 break;
             case RECORD:
                 selection = Constants.CostList._ID + "=?";
-                selectionArgs = new String[]{uri.getLastPathSegment()};
+                selectionArgs = new String[]{ uri.getLastPathSegment() };
                 break;
             default:
-                Log.w(TAG, "delete : Unknown uri : " + uri.toString());
-                return 0;
+                Log.w(this, "delete : Unknown uri : " + uri.toString());
+                return -1;
         }
 
         return mDbHelper.getWritableDatabase().delete(Constants.TABLE_COST, selection, selectionArgs);
@@ -117,18 +117,18 @@ public class CostListProvider extends ContentProvider {
             @Nullable String[] selectionArgs) {
         int match = sUriMatcher.match(uri);
         switch (match) {
-            case TRACKS:
-                break;
             case THREAD_LIST:
                 break;
             case RECORD:
+                selection = Constants.CostList._ID + "=?";
+                selectionArgs = new String[]{ uri.getLastPathSegment() };
                 break;
             default:
-                Log.w(TAG, "delete : Unknown uri : " + uri.toString());
-                return 0;
+                Log.w(this, "update : Unknown uri : " + uri.toString());
+                return -1;
         }
 
-        return 0;
+        return mDbHelper.getWritableDatabase().update(Constants.TABLE_COST, values, selection, selectionArgs);
     }
 
     @Nullable

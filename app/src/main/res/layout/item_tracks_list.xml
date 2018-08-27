@@ -1,22 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:hapticFeedbackEnabled="true"
     android:minHeight="?attr/listPreferredItemHeight"
     android:orientation="horizontal"
     android:paddingEnd="16dp"
     android:paddingStart="16dp">
 
-    <TextView
-        android:id="@+id/title"
+    <ImageView
+        android:id="@+id/coin_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:text="BTC-CNY"
-        android:textSize="20sp" />
+        tools:src="@drawable/ic_btc" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/coin_icon"
+        android:layout_toStartOf="@+id/status_container"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@android:style/TextAppearance"
+        android:textSize="20sp"
+        tools:text="BTC-CNY" />
 
     <LinearLayout
+        android:id="@+id/status_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -28,12 +46,12 @@
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="profit" />
+            tools:text="profit" />
 
         <TextView
             android:id="@+id/cost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="BTC-CNY" />
+            tools:text="BTC-CNY" />
     </LinearLayout>
 </RelativeLayout>

@@ -3,10 +3,10 @@ package com.greenshadow.costbook.provider;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+
+import com.greenshadow.costbook.utils.Log;
 
 public class CostDbHelper extends SQLiteOpenHelper {
-    private static final String TAG = CostDbHelper.class.getSimpleName();
     private static final int DB_VERSION = 1;
 
     /*package*/ CostDbHelper(Context context) {
@@ -25,7 +25,7 @@ public class CostDbHelper extends SQLiteOpenHelper {
                 Constants.CostList.NOTE + "          TEXT," +
                 Constants.CostList.TIME + "          INTEGER        NOT NULL" +
                 ");";
-        Log.d(TAG, "sql = " + createTable);
+        Log.d(this, "sql = " + createTable);
 
         db.execSQL(createTable);
     }

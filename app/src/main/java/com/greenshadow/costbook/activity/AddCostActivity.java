@@ -7,23 +7,23 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.greenshadow.costbook.BuildConfig;
 import com.greenshadow.costbook.R;
+import com.greenshadow.costbook.adapter.IconSpinnerAdapter;
 import com.greenshadow.costbook.provider.Constants;
+import com.greenshadow.costbook.utils.Log;
 import com.greenshadow.costbook.view.IconInputTextLayout;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -31,9 +31,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class AddCostActivity extends AppCompatActivity {
-    private static final String TAG = AddCostActivity.class.getSimpleName();
+    public static final String ACTION_ADD_THREAD = "com.greenshadow.costbook.activity.AddCostActivity.ACTION_ADD_THREAD";
+    public static final String ACTION_ADD_RECORD = "com.greenshadow.costbook.activity.AddCostActivity.ACTION_ADD_RECORD";
+    public static final String ACTION_EDIT_RECORD = "com.greenshadow.costbook.activity.AddCostActivity.ACTION_EDIT_RECORD";
 
-    public static String EXTRA_TITLE = "extra_title";
+    public static final String EXTRA_RECORD_ID = "extra_record_id";
+    public static final String EXTRA_TITLE = "extra_title";
+
+    private static final int MODE_NORMAL = 0;
+    private static final int MODE_ADD_RECORD = 1;
+    private static final int MODE_EDIT_RECORD = 2;
     private static final int MENU_SAVE = 100;
 
     private Toolbar mToolBar;
@@ -50,7 +57,8 @@ public class AddCostActivity extends AppCompatActivity {
 
     private DatePickerDialog mDialog;
 
-    private boolean mIsRecordMode = false;
+    private int mRecordId;
+    private int mMode = MODE_NORMAL;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +78,7 @@ public class AddCostActivity extends AppCompatActivity {
         mCurrencyTypeView = findViewById(R.id.spinner_price_currency_type);
         mNoteView = findViewById(R.id.cost_note);
         setupInputs();
+        setupSpinners();
 
         setResult(RESULT_CANCELED);
     }
@@ -78,7 +87,7 @@ public class AddCostActivity extends AppCompatActivity {
         setSupportActionBar(mToolBar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) {
-            Log.w(TAG, "Action bar is null!");
+            Log.w(this, "Action bar is null!");
             return;
         }
         actionBar.setHomeButtonEnabled(true);
@@ -87,17 +96,68 @@ public class AddCostActivity extends AppCompatActivity {
 
     private void setupInputs() {
         Intent i = getIntent();
-        String title = i.getStringExtra(EXTRA_TITLE);
-        if (!TextUtils.isEmpty(title)) {
-            Log.d(TAG, "setupInputs : enter into add record mode.");
-            mTitle = title;
-            enterRecordMode();
-        } else {
-            Log.d(TAG, "setupInputs : enter into add tracks mode.");
-            enterNormalMode();
+        String action = i.getAction();
+        if (action == null) {
+            Log.e(this, "There should has an action when try to start AddCostActivity");
+            if (BuildConfig.LOG_DEBUG) {
+                Toast.makeText(this, "no action", Toast.LENGTH_LONG).show();
+            }
+            finish();
+            return;
+        }
+        switch (action) {
+            case ACTION_ADD_RECORD:
+                String title = i.getStringExtra(EXTRA_TITLE);
+                if (!TextUtils.isEmpty(title)) {
+                    Log.d(this, "setupInputs : enter into add record mode.");
+                    mTitle = title;
+                    enterRecordMode();
+                } else {
+                    Log.w(this, "setupInputs : got add record action but no valid extras! enter normal mode");
+                    enterNormalMode();
+                }
+                break;
+            case ACTION_ADD_THREAD:
+                Log.d(this, "setupInputs : enter into add tracks mode.");
+                enterNormalMode();
+                break;
+            case ACTION_EDIT_RECORD:
+                int id = i.getIntExtra(EXTRA_RECORD_ID, -1);
+                if (id < 0) {
+                    Log.e(this, "setupInputs : got edit action but invalid id!");
+                    if (BuildConfig.LOG_DEBUG) {
+                        Toast.makeText(this, "Invalid ID", Toast.LENGTH_LONG).show();
+                    }
+                    finish();
+                    return;
+                }
+                mRecordId = id;
+                enterEditMode();
+                break;
+            default:
+                Log.e(this, "unknown action " + action);
+                if (BuildConfig.LOG_DEBUG) {
+                    Toast.makeText(this, "Unknown action " + action, Toast.LENGTH_LONG).show();
+                }
+                finish();
+                break;
         }
 
         mBuyTimeView.getEditText().setOnClickListener(v -> showDatePickerDialog());
+    }
+
+    private void setupSpinners() {
+        List<IconSpinnerAdapter.IconItem> prices = new ArrayList<>();
+        prices.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_unit_price, R.string.unit_price));
+        prices.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_total_price, R.string.total_price));
+        mPriceTypeView.setAdapter(new IconSpinnerAdapter(this, prices));
+
+        List<IconSpinnerAdapter.IconItem> currencies = new ArrayList<>();
+        currencies.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_cny, R.string.currency_cny));
+        currencies.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_btc, R.string.currency_btc));
+        currencies.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_eth, R.string.currency_eth));
+        currencies.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_usdt, R.string.currency_usdt));
+        mCurrencyTypeView.setAdapter(new IconSpinnerAdapter(this, currencies));
     }
 
     private void enterRecordMode() {
@@ -105,12 +165,12 @@ public class AddCostActivity extends AppCompatActivity {
         try (Cursor c = getContentResolver().query(getThreads, null, null,
                 null, null)) {
             if (c == null || c.getCount() <= 0 || !c.moveToFirst()) {
-                Log.w(TAG, "Invalid cursor " + c);
+                Log.w(this, "Invalid cursor " + c);
                 enterNormalMode();
                 return;
             }
 
-            mTitleView.getEditText().setText(mTitle);
+            mTitleView.setText(mTitle);
             mTitleView.setEnabled(false);
 
             int currencySelection = c.getInt(c.getColumnIndex(Constants.CostList.CURRENCY_TYPE));
@@ -118,15 +178,15 @@ public class AddCostActivity extends AppCompatActivity {
                 mCurrencyTypeView.setSelection(currencySelection);
                 mCurrencyTypeView.setEnabled(false);
             } else {
-                Log.w(TAG, "Invalid selection " + currencySelection);
+                Log.w(this, "Invalid selection " + currencySelection);
                 enterNormalMode();
                 return;
             }
         } catch (Exception e) {
-            Log.e(TAG, "query error!", e);
+            Log.e(this, "query error!", e);
             enterNormalMode();
         }
-        mIsRecordMode = true;
+        mMode = MODE_ADD_RECORD;
     }
 
     private void enterNormalMode() {
@@ -134,26 +194,83 @@ public class AddCostActivity extends AppCompatActivity {
         mTitleView.getEditText().getText().clear();
         mCurrencyTypeView.setEnabled(true);
         mCurrencyTypeView.setSelection(0);
-        mIsRecordMode = false;
+        mMode = MODE_NORMAL;
+    }
+
+    private void enterEditMode() {
+        Uri recordUri = Uri.withAppendedPath(Constants.CostList.RECORD_URI, String.valueOf(mRecordId));
+        try (Cursor c = getContentResolver().query(recordUri, null, null, null, null)) {
+            if (c == null || c.getCount() <= 0 || !c.moveToFirst()) {
+                Log.e(this, "Invalid cursor " + c);
+                if (BuildConfig.LOG_DEBUG) {
+                    Toast.makeText(this, "Error when query db", Toast.LENGTH_LONG).show();
+                }
+                finish();
+                return;
+            }
+
+            mTitle = c.getString(c.getColumnIndex(Constants.CostList.TITLE));
+            mTitleView.setText(mTitle);
+            mTitleView.setEnabled(false);
+
+            int currencySelection = c.getInt(c.getColumnIndex(Constants.CostList.CURRENCY_TYPE));
+            if (currencySelection >= 0 && currencySelection <= 3) {
+                mCurrencyTypeView.setSelection(currencySelection);
+                mCurrencyTypeView.setEnabled(false);
+            } else {
+                Log.w(this, "Invalid selection " + currencySelection);
+                if (BuildConfig.LOG_DEBUG) {
+                    Toast.makeText(this, "Invalid currency selection", Toast.LENGTH_LONG).show();
+                }
+                finish();
+                return;
+            }
+
+            String total = c.getString(c.getColumnIndex(Constants.CostList.TOTAL));
+            mTotal = new BigDecimal(total);
+            mTotalView.setText(total);
+
+            String price = c.getString(c.getColumnIndex(Constants.CostList.PRICE));
+            mPrice = new BigDecimal(price);
+            mPriceView.setText(price);
+            mPriceTypeView.setSelection(1); // total price
+
+            mBuyTime = c.getString(c.getColumnIndex(Constants.CostList.BUY_TIME));
+            mBuyTimeView.setText(mBuyTime);
+
+            mNote = c.getString(c.getColumnIndex(Constants.CostList.NOTE));
+            mNoteView.setText(mNote);
+        } catch (Exception e) {
+            Log.e(this, "query error! Uri = " + recordUri, e);
+            if (BuildConfig.LOG_DEBUG) {
+                Toast.makeText(this, "Query error", Toast.LENGTH_LONG).show();
+            }
+            finish();
+            return;
+        }
+        mMode = MODE_EDIT_RECORD;
     }
 
     private void showDatePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
         if (mDialog == null) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
             mDialog = new DatePickerDialog(AddCostActivity.this,
-                    R.style.AppTheme_DatePickerDialog,
+                    R.style.AppTheme_Dialog,
                     (view, year, month, dayOfMonth) -> {
                         String selectedDate = year + "/" + month + "/" + dayOfMonth;
-                        mBuyTimeView.getEditText().setText(selectedDate);
+                        mBuyTimeView.setText(selectedDate);
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH) + 1,
                     calendar.get(Calendar.DAY_OF_MONTH));
             mDialog.setCanceledOnTouchOutside(false);
+            mDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
         } else if (mDialog.isShowing()) {
             return;
         }
+        mDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_MONTH));
         mDialog.show();
     }
 
@@ -171,7 +288,7 @@ public class AddCostActivity extends AppCompatActivity {
                 break;
             case MENU_SAVE:
                 clearErrors();
-                if (checkInputs() && tryAddTrack()) {
+                if (checkInputs() && trySaveRecord()) {
                     setResult(RESULT_OK);
                     finish();
                 }
@@ -185,7 +302,7 @@ public class AddCostActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.d(TAG, newConfig.toString());
+        Log.d(this, newConfig.toString());
     }
 
     private void clearErrors() {
@@ -195,11 +312,11 @@ public class AddCostActivity extends AppCompatActivity {
     }
 
     private boolean checkInputs() {
-        mTitle = mTitleView.getEditText().getText().toString();
-        String mTotalStr = mTotalView.getEditText().getText().toString();
-        String mPriceStr = mPriceView.getEditText().getText().toString();
-        mBuyTime = mBuyTimeView.getEditText().getText().toString();
-        mNote = mNoteView.getText().toString();
+        mTitle = mTitleView.getText().trim();
+        String mTotalStr = mTotalView.getText();
+        String mPriceStr = mPriceView.getText();
+        mBuyTime = mBuyTimeView.getText();
+        mNote = mNoteView.getText().trim();
 
         boolean result = true;
 
@@ -232,7 +349,7 @@ public class AddCostActivity extends AppCompatActivity {
             }
         }
 
-        if (!mIsRecordMode && !checkTitle()) {
+        if (mMode == MODE_NORMAL && !checkTitle()) {
             result = false;
         }
 
@@ -244,13 +361,13 @@ public class AddCostActivity extends AppCompatActivity {
                 Uri.withAppendedPath(Constants.CostList.THREAD_URI, mTitle),
                 new String[]{ Constants.CostList._COUNT }, null, null, null)) {
             if (c == null || c.getCount() <= 0 || !c.moveToFirst()) {
-                Log.e(TAG, "checkTitle : invalid cursor : " + c);
+                Log.e(this, "checkTitle : invalid cursor : " + c);
                 return false;
             }
 
             int count = c.getInt(0);
             if (count > 0) {
-                Log.w(TAG, "checkTitle : title " + mTitle + " already exist!");
+                Log.w(this, "checkTitle : title " + mTitle + " already exist!");
                 mTitleView.setError(getString(R.string.title_exist, mTitle));
                 return false;
             }
@@ -258,7 +375,7 @@ public class AddCostActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean tryAddTrack() {
+    private boolean trySaveRecord() {
         if (TextUtils.isEmpty(mTitle)) {
             return false;
         }
@@ -283,13 +400,25 @@ public class AddCostActivity extends AppCompatActivity {
         cv.put(Constants.CostList.NOTE, mNote);
         cv.put(Constants.CostList.TIME, System.currentTimeMillis());
 
-        Uri result = getContentResolver().insert(Constants.CostList.THREAD_URI, cv);
-        if (result == null) {
-            Log.e(TAG, "insert error. cv = " + cv);
-            Toast.makeText(this, getString(R.string.add_failed), Toast.LENGTH_LONG).show();
-            return false;
+        if (mMode == MODE_EDIT_RECORD) {
+            String stringId = String.valueOf(mRecordId);
+            Uri recordUri = Uri.withAppendedPath(Constants.CostList.RECORD_URI, stringId);
+            int result = getContentResolver().update(recordUri, cv, null, null);
+            if (result == 1) {
+                return true;
+            } else {
+                Log.e(this, "update error, db returns " + result);
+                return false;
+            }
         } else {
-            Toast.makeText(this, getString(R.string.add_success), Toast.LENGTH_LONG).show();
+            Uri result = getContentResolver().insert(Constants.CostList.THREAD_URI, cv);
+            if (result == null) {
+                Log.e(this, "insert error. cv = " + cv);
+                Toast.makeText(this, getString(R.string.add_failed), Toast.LENGTH_LONG).show();
+                return false;
+            } else {
+                Toast.makeText(this, getString(R.string.add_success), Toast.LENGTH_LONG).show();
+            }
         }
 
         return true;

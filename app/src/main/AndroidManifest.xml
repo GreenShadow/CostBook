@@ -22,12 +22,19 @@
 
         <activity
             android:name=".activity.AddCostActivity"
-            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <intent-filter>
+                <action android:name="com.greenshadow.costbook.activity.AddCostActivity.ACTION_ADD_THREAD" />
+                <action android:name="com.greenshadow.costbook.activity.AddCostActivity.ACTION_ADD_RECORD" />
+                <action android:name="com.greenshadow.costbook.activity.AddCostActivity.ACTION_EDIT_RECORD" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".activity.ThreadListActivity" />
-
-        <activity android:name=".activity.TestActivity" />
 
         <provider
             android:name=".provider.CostListProvider"

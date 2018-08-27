@@ -4,17 +4,20 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.greenshadow.costbook.R;
 import com.greenshadow.costbook.adapter.ThreadAdapter;
 import com.greenshadow.costbook.provider.Constants;
+import com.greenshadow.costbook.utils.Log;
+import com.greenshadow.costbook.view.EmptyRecyclerView;
 
 import java.math.BigDecimal;
 
@@ -22,20 +25,36 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class ThreadListActivity extends AppCompatActivity {
-    private static final String TAG = ThreadListActivity.class.getSimpleName();
-
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_COST = "cost";
 
+    public static final int WHAT_REFRESH_LIST = 100;
+
     private Toolbar mToolbar;
-    private ListView mList;
+    private EmptyRecyclerView mList;
     private FloatingActionButton mFab;
 
     private Cursor mCursor;
     private ThreadAdapter mAdapter;
     private String mTitle;
+
+    private Handler mHandler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case WHAT_REFRESH_LIST:
+                    refreshList();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,7 +91,7 @@ public class ThreadListActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) {
-            Log.w(TAG, "Action bar is null!");
+            Log.w(this, "Action bar is null!");
             return;
         }
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -89,7 +108,7 @@ public class ThreadListActivity extends AppCompatActivity {
         try {
             costNum = new BigDecimal(costString);
         } catch (NumberFormatException e) {
-            Log.e(TAG, "Format number error !", e);
+            Log.e(this, "Format number error !", e);
         }
 
         if (costNum == null) {
@@ -113,11 +132,13 @@ public class ThreadListActivity extends AppCompatActivity {
     }
 
     private void setupList() {
+        mAdapter = new ThreadAdapter(this, null, mHandler);
         mList.setEmptyView(findViewById(R.id.thread_list_empty));
-
-        mAdapter = new ThreadAdapter(this, null);
         mList.setAdapter(mAdapter);
-        mList.setOnItemClickListener((parent, view, position, id) -> onItemClick(view));
+        mList.setLayoutManager(new LinearLayoutManager(this));
+        DividerItemDecoration decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        decoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.recycler_decoration));
+        mList.addItemDecoration(decoration);
     }
 
     private void setupFab() {
@@ -127,7 +148,8 @@ public class ThreadListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        refreshList();
+        mHandler.removeMessages(WHAT_REFRESH_LIST);
+        mHandler.sendEmptyMessage(WHAT_REFRESH_LIST);
     }
 
     private void refreshList() {
@@ -135,9 +157,14 @@ public class ThreadListActivity extends AppCompatActivity {
         try {
             mCursor = getContentResolver().query(getThreads, null, null,
                     null, null);
+            if (mCursor == null || mCursor.getCount() == 0) {
+                Log.w(this, "got an empty cursor");
+                finish();
+                return;
+            }
             mAdapter.changeCursor(mCursor);
         } catch (Exception e) {
-            Log.e(TAG, "setupList : init adapter error", e);
+            Log.e(this, "setupList : init adapter error", e);
         }
     }
 
@@ -154,33 +181,32 @@ public class ThreadListActivity extends AppCompatActivity {
         return true;
     }
 
-    private void onItemClick(View v) {
-        TextView noteView = v.findViewById(R.id.record_note);
-        if (noteView == null) {
-            return;
-        }
-        String note = noteView.getText().toString();
-        if (TextUtils.isEmpty(note)) {
-            return;
-        }
-
-        if (noteView.getVisibility() == View.VISIBLE) {
-            noteView.setVisibility(View.GONE);
-        } else {
-            noteView.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_record:
-                Intent i = new Intent(this, AddCostActivity.class);
+                Intent i = new Intent(AddCostActivity.ACTION_ADD_RECORD);
                 i.putExtra(AddCostActivity.EXTRA_TITLE, mTitle);
                 startActivity(i);
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        if (requestCode != ThreadAdapter.REQUEST_EDIT_RECORD) {
+            return;
+        }
+
+        // edit record OK
+        mHandler.removeMessages(WHAT_REFRESH_LIST);
+        mHandler.sendEmptyMessage(WHAT_REFRESH_LIST);
     }
 
     @Override

@@ -77,6 +77,10 @@ public class IconInputTextLayout extends RelativeLayout {
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.IconInputTextLayout);
 
+        boolean focusable = ta.getBoolean(R.styleable.IconInputTextLayout_android_focusable, true);
+        mInput.setFocusable(focusable);
+        mInput.setCursorVisible(focusable);
+
         Drawable leadingIcon = ta.getDrawable(R.styleable.IconInputTextLayout_leading_icon);
         if (leadingIcon != null) {
             mLeadingIcon.setVisibility(VISIBLE);
@@ -93,7 +97,7 @@ public class IconInputTextLayout extends RelativeLayout {
             mTrailingIcon.setVisibility(GONE);
         }
 
-        int inputType = ta.getInt(R.styleable.IconInputTextLayout_input_type, EditorInfo.TYPE_NULL);
+        int inputType = ta.getInt(R.styleable.IconInputTextLayout_android_inputType, EditorInfo.TYPE_NULL);
         mInput.setInputType(inputType);
 
         mIsLabelAnimateEnabled = ta.getBoolean(R.styleable.IconInputTextLayout_label_animate_enabled, true);
@@ -146,13 +150,18 @@ public class IconInputTextLayout extends RelativeLayout {
             @Override
             public void afterTextChanged(Editable s) {
                 boolean hasContent = s.length() != 0;
+                boolean hasFocus = mInput.hasFocus();
 
                 if (hasContent) {
                     mInput.setVisibility(VISIBLE);
                 } else {
-                    mInput.setVisibility(GONE);
+                    if (!hasFocus) {
+                        mInput.setVisibility(GONE);
+                    } else {
+                        mInput.setVisibility(VISIBLE);
+                    }
                 }
-                expandCollapseLabel(hasContent, getWindowVisibility() == VISIBLE);
+                expandCollapseLabel(hasContent || hasFocus, getWindowVisibility() == VISIBLE);
             }
         });
 
@@ -282,6 +291,10 @@ public class IconInputTextLayout extends RelativeLayout {
 
     public String getText() {
         return mInput.getText().toString();
+    }
+
+    public void setText(String text) {
+        mInput.setText(text);
     }
 
     public EditText getEditText() {

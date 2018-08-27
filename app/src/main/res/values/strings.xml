@@ -9,6 +9,9 @@
     <string name="title_add_cost_ticket">Add cost ticket</string>
     <string name="title_home">Home</string>
     <string name="cost_list_empty_notice">No records, please create a new cost.</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="delete_content">Will delete \'%1s\'</string>
+    <string name="delete_record">Will delete this record</string>
 
     <string name="cost_title_hint">Title</string>
     <string name="cost_title_error">Please input a title</string>
@@ -29,9 +32,12 @@
     <string name="currency_btc" translatable="false">BTC</string>
     <string name="currency_eth" translatable="false">ETH</string>
     <string name="currency_usdt" translatable="false">USDT</string>
-    <string name="cost_note">Notes</string>
+    <string name="cost_note">Note</string>
     <string name="stored_in_hint">*DO NOT enter your private key or mnemonic</string>
     <string name="save">Save</string>
 
     <string name="title_exist">Title \'%1s\' already exist!</string>
+
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

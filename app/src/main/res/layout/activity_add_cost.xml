@@ -30,33 +30,33 @@
                 android:id="@+id/til_cost_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="text"
                 android:nextFocusDown="@+id/til_cost_total"
                 android:paddingBottom="8dp"
                 android:theme="@style/AppTheme.TextInput"
                 app:error="@string/cost_title_error"
                 app:hint="@string/cost_title_hint"
-                app:input_type="text"
                 app:leading_icon="@drawable/ic_info" />
 
             <com.greenshadow.costbook.view.IconInputTextLayout
                 android:id="@+id/til_cost_total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="numberSigned|numberDecimal"
                 android:paddingBottom="8dp"
                 android:theme="@style/AppTheme.TextInput"
                 app:error="@string/cost_total_error"
                 app:hint="@string/cost_total_hint"
-                app:input_type="numberDecimal"
                 app:leading_icon="@drawable/ic_number" />
 
             <com.greenshadow.costbook.view.IconInputTextLayout
                 android:id="@+id/til_cost_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
                 android:paddingBottom="8dp"
                 android:theme="@style/AppTheme.TextInput"
                 app:hint="@string/trading_price_hint"
-                app:input_type="number"
                 app:leading_icon="@drawable/ic_buy" />
 
             <LinearLayout
@@ -78,7 +78,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
-                        android:entries="@array/buying_price_type_spinner"
                         android:gravity="center" />
                 </RelativeLayout>
 
@@ -97,7 +96,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
-                        android:entries="@array/buying_price_currency_spinner"
                         android:gravity="center" />
                 </RelativeLayout>
             </LinearLayout>
@@ -107,20 +105,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:descendantFocusability="blocksDescendants"
+                android:inputType="date"
                 android:paddingBottom="8dp"
                 android:theme="@style/AppTheme.TextInput"
                 app:hint="@string/buy_time_hint"
-                app:input_type="date"
                 app:leading_icon="@drawable/ic_time" />
 
             <com.greenshadow.costbook.view.IconInputTextLayout
                 android:id="@+id/cost_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="text"
                 android:paddingBottom="8dp"
                 android:theme="@style/AppTheme.TextInput"
                 app:hint="@string/cost_note"
-                app:input_type="text"
                 app:leading_icon="@drawable/ic_note"
                 app:note="@string/stored_in_hint" />
         </LinearLayout>

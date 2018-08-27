@@ -19,8 +19,13 @@ android {
     }
     buildTypes {
         release {
+            buildConfigField('boolean', "LOG_DEBUG", "false")
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            buildConfigField('boolean', "LOG_DEBUG", "true")
         }
     }
     buildToolsVersion '28.0.2'

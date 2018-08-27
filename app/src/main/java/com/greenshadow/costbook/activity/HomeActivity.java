@@ -6,36 +6,55 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.greenshadow.costbook.R;
 import com.greenshadow.costbook.adapter.TracksAdapter;
 import com.greenshadow.costbook.provider.Constants;
+import com.greenshadow.costbook.utils.Log;
+import com.greenshadow.costbook.view.EmptyRecyclerView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class HomeActivity extends AppCompatActivity {
-    private static final String TAG = HomeActivity.class.getSimpleName();
+    public static final int WHAT_REFRESH_LIST = 101;
 
     private Toolbar mToolBar;
     private DrawerLayout mDrawer;
     private NavigationView mDrawerNavigation;
     private FloatingActionButton mFab;
-    private ListView mCostList;
+    private EmptyRecyclerView mCostList;
     private Cursor mCursor;
     private TracksAdapter mAdapter;
+
+    private Handler mHandler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case WHAT_REFRESH_LIST:
+                    refreshList();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +87,7 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(mToolBar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) {
-            Log.w(TAG, "Action bar is null!");
+            Log.w(this, "Action bar is null!");
             return;
         }
 
@@ -88,7 +107,7 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         mDrawerNavigation.setNavigationItemSelectedListener(menuItem -> {
-            Log.d(TAG, "'" + menuItem.getTitle() + "' selected");
+            Log.d(this, "'" + menuItem.getTitle() + "' selected");
             return false;
         });
     }
@@ -98,17 +117,20 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupList() {
+        mAdapter = new TracksAdapter(this, mCursor, mHandler);
         mCostList.setEmptyView(findViewById(R.id.cost_list_empty));
-
-        mAdapter = new TracksAdapter(this, mCursor);
         mCostList.setAdapter(mAdapter);
-        mCostList.setOnItemClickListener((parent, view, position, id) -> clickedAt(position));
+        mCostList.setLayoutManager(new LinearLayoutManager(this));
+        DividerItemDecoration decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        decoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.recycler_decoration));
+        mCostList.addItemDecoration(decoration);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        refreshList();
+        mHandler.removeMessages(WHAT_REFRESH_LIST);
+        mHandler.sendEmptyMessage(WHAT_REFRESH_LIST);
     }
 
     private void refreshList() {
@@ -121,18 +143,10 @@ public class HomeActivity extends AppCompatActivity {
     private void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab_add_cost:
-                startActivity(new Intent(this, AddCostActivity.class));
-//                startActivity(new Intent(this, TestActivity.class));
+                startActivity(new Intent(AddCostActivity.ACTION_ADD_THREAD));
                 break;
             default:
                 break;
         }
-    }
-
-    private void clickedAt(int position) {
-        Intent i = new Intent(this, ThreadListActivity.class);
-        i.putExtra(ThreadListActivity.EXTRA_TITLE, mAdapter.getTitleAt(position));
-        i.putExtra(ThreadListActivity.EXTRA_COST, mAdapter.getCostAt(position));
-        startActivity(i);
     }
 }

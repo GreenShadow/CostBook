@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
+    android:background="?attr/selectableItemBackground"
     android:orientation="vertical"
     android:paddingBottom="4dp"
     android:paddingEnd="16dp"
@@ -19,9 +22,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:text="+123456"
+            android:layout_toStartOf="@+id/record_date"
             android:textColor="@android:color/holo_green_dark"
-            android:textSize="16sp" />
+            android:textSize="18sp"
+            tools:text="+123456" />
 
         <TextView
             android:id="@+id/record_date"
@@ -29,13 +33,88 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:text="2018/02/02" />
+            tools:text="2018/02/02" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/record_note"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/record_bottom_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Note"
-        android:visibility="gone" />
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/record_note_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:background="#CCCC"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cost_note" />
+
+            <TextView
+                android:id="@+id/record_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance"
+                tools:text="Note" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingTop="8dp">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/record_edit"
+                android:layout_width="112dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hapticFeedbackEnabled="true"
+                android:text="@string/edit"
+                android:textAllCaps="false"
+                android:theme="@style/AppTheme.TextInput"
+                app:icon="@drawable/ic_edit"
+                app:iconGravity="textStart"
+                app:iconSize="16dp" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/record_delete"
+                android:layout_width="112dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hapticFeedbackEnabled="true"
+                android:text="@string/delete"
+                android:textAllCaps="false"
+                android:theme="@style/AppTheme.TextInput"
+                app:icon="@drawable/ic_delete"
+                app:iconGravity="textStart"
+                app:iconSize="16dp" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
