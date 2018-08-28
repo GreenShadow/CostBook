@@ -16,7 +16,6 @@
  */
 package com.greenshadow.costbook.adapter;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 

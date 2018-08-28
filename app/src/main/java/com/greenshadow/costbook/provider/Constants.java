@@ -8,6 +8,7 @@ public interface Constants {
 
     String DB_NAME = "cost_data.db";
     String TABLE_COST = "cost";
+    String TABLE_COST_TMP = "cost_tmp"; // used for down grade db
 
     interface CostList extends BaseColumns {
         String AUTHORITY = AUTHORITY_BASE + "list";
@@ -20,6 +21,7 @@ public interface Constants {
         String TITLE = "title";
         String TOTAL = "total";
         String PRICE = "price";
+        String PRICE_TYPE = "price_type";
         String CURRENCY_TYPE = "currency_type";
         String BUY_TIME = "buy_time";
         String NOTE = "note";

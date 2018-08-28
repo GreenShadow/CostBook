@@ -38,9 +38,12 @@ public class AddCostActivity extends AppCompatActivity {
     public static final String EXTRA_RECORD_ID = "extra_record_id";
     public static final String EXTRA_TITLE = "extra_title";
 
-    private static final int MODE_NORMAL = 0;
-    private static final int MODE_ADD_RECORD = 1;
-    private static final int MODE_EDIT_RECORD = 2;
+    private enum Mode {
+        MODE_NORMAL,
+        MODE_ADD_RECORD,
+        MODE_EDIT_RECORD,
+    }
+
     private static final int MENU_SAVE = 100;
 
     private Toolbar mToolBar;
@@ -58,7 +61,7 @@ public class AddCostActivity extends AppCompatActivity {
     private DatePickerDialog mDialog;
 
     private int mRecordId;
-    private int mMode = MODE_NORMAL;
+    private Mode mMode = Mode.MODE_NORMAL;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -186,7 +189,7 @@ public class AddCostActivity extends AppCompatActivity {
             Log.e(this, "query error!", e);
             enterNormalMode();
         }
-        mMode = MODE_ADD_RECORD;
+        mMode = Mode.MODE_ADD_RECORD;
     }
 
     private void enterNormalMode() {
@@ -194,7 +197,7 @@ public class AddCostActivity extends AppCompatActivity {
         mTitleView.getEditText().getText().clear();
         mCurrencyTypeView.setEnabled(true);
         mCurrencyTypeView.setSelection(0);
-        mMode = MODE_NORMAL;
+        mMode = Mode.MODE_NORMAL;
     }
 
     private void enterEditMode() {
@@ -233,7 +236,9 @@ public class AddCostActivity extends AppCompatActivity {
             String price = c.getString(c.getColumnIndex(Constants.CostList.PRICE));
             mPrice = new BigDecimal(price);
             mPriceView.setText(price);
-            mPriceTypeView.setSelection(1); // total price
+
+            int priceType = c.getInt(c.getColumnIndex(Constants.CostList.PRICE_TYPE));
+            mPriceTypeView.setSelection(priceType);
 
             mBuyTime = c.getString(c.getColumnIndex(Constants.CostList.BUY_TIME));
             mBuyTimeView.setText(mBuyTime);
@@ -248,7 +253,7 @@ public class AddCostActivity extends AppCompatActivity {
             finish();
             return;
         }
-        mMode = MODE_EDIT_RECORD;
+        mMode = Mode.MODE_EDIT_RECORD;
     }
 
     private void showDatePickerDialog() {
@@ -349,7 +354,7 @@ public class AddCostActivity extends AppCompatActivity {
             }
         }
 
-        if (mMode == MODE_NORMAL && !checkTitle()) {
+        if (mMode == Mode.MODE_NORMAL && !checkTitle()) {
             result = false;
         }
 
@@ -395,12 +400,13 @@ public class AddCostActivity extends AppCompatActivity {
         cv.put(Constants.CostList.TITLE, mTitle);
         cv.put(Constants.CostList.TOTAL, mTotal.toString());
         cv.put(Constants.CostList.PRICE, mPrice.toString());
+        cv.put(Constants.CostList.PRICE_TYPE, mPriceTypeView.getSelectedItemPosition());
         cv.put(Constants.CostList.CURRENCY_TYPE, mCurrencyTypeView.getSelectedItemPosition());
         cv.put(Constants.CostList.BUY_TIME, mBuyTime);
         cv.put(Constants.CostList.NOTE, mNote);
         cv.put(Constants.CostList.TIME, System.currentTimeMillis());
 
-        if (mMode == MODE_EDIT_RECORD) {
+        if (mMode == Mode.MODE_EDIT_RECORD) {
             String stringId = String.valueOf(mRecordId);
             Uri recordUri = Uri.withAppendedPath(Constants.CostList.RECORD_URI, stringId);
             int result = getContentResolver().update(recordUri, cv, null, null);

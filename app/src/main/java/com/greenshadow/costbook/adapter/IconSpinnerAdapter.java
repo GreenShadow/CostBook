@@ -60,7 +60,7 @@ public class IconSpinnerAdapter extends BaseAdapter {
             this.labelId = labelId;
         }
 
-        public int iconId;
-        public int labelId;
+        private int iconId;
+        private int labelId;
     }
 }
