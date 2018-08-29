@@ -13,7 +13,7 @@
         android:elevation="@dimen/default_elevation"
         android:fitsSystemWindows="true"
         app:theme="@style/AppTheme.ToolBar"
-        app:title="@string/about"
+        app:title="@string/settings"
         app:titleTextColor="?attr/colorTextTitle" />
 
     <LinearLayout
