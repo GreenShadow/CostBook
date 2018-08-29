@@ -2,12 +2,33 @@
 <resources>
     <declare-styleable name="IconInputTextLayout">
         <attr name="label_animate_enabled" format="boolean" />
-        <attr name="leading_icon" format="reference" />
+
         <attr name="hint" format="string" />
-        <attr name="trailing_icon" format="reference" />
         <attr name="note" format="string" />
         <attr name="error" format="string" />
+
+        <attr name="leading_icon" format="reference" />
+        <attr name="trailing_icon" format="reference" />
+
+        <attr name="color_error" format="color" />
+        <attr name="color_text" format="color" />
+
+        <!-- Android attr -->
         <attr name="android:inputType" />
         <attr name="android:focusable" />
+    </declare-styleable>
+
+    <declare-styleable name="AppTheme">
+        <attr name="colorPrimary" format="color" />
+        <attr name="colorAccent" format="color" />
+
+        <attr name="colorInputField" format="color" />
+        <attr name="colorText" format="color" />
+        <attr name="colorTextTitle" format="color" />
+        <attr name="colorLabel" format="color" />
+
+        <attr name="colorIcon" format="color" />
+
+        <attr name="colorListDivider" format="color" />
     </declare-styleable>
 </resources>

@@ -10,11 +10,11 @@
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimaryDark"
         android:elevation="@dimen/default_elevation"
         android:fitsSystemWindows="true"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:titleTextColor="@color/colorAccent" />
+        app:theme="@style/AppTheme.ToolBar"
+        app:titleTextColor="?attr/colorTextTitle" />
 
     <RelativeLayout
         android:id="@+id/cost_panel"
@@ -67,7 +67,7 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/ic_add"
-            app:backgroundTint="@color/colorPrimary"
+            app:backgroundTint="?attr/colorAccent"
             app:elevation="@dimen/default_elevation"
             app:fabSize="normal"
             app:rippleColor="#FFF" />

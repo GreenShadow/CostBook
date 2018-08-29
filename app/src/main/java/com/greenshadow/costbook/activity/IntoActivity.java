@@ -1,19 +1,18 @@
 package com.greenshadow.costbook.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.greenshadow.costbook.CostBookApp;
 import com.greenshadow.costbook.R;
 import com.greenshadow.costbook.utils.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class IntoActivity extends AppCompatActivity implements View.OnClickListener {
+public class IntoActivity extends BaseActivity implements View.OnClickListener {
     private static final int WHAT_DEC = 1;
     private static final int WHAT_SKIP = 0;
 
@@ -52,6 +51,13 @@ public class IntoActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        boolean enable = getSharedPreferences().getBoolean(CostBookApp.PREF_KEY_WELCOME_PAGE,
+                CostBookApp.DEFAULT_WELCOME_ENABLE);
+        if (!enable) {
+            jumpToHome();
+            return;
+        }
+
         setContentView(R.layout.activity_into);
         mSkipButton = findViewById(R.id.into_skip);
         mSkipButton.setOnClickListener(this);

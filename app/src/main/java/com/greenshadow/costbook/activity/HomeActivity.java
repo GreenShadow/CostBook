@@ -17,13 +17,13 @@ import com.google.android.material.navigation.NavigationView;
 import com.greenshadow.costbook.R;
 import com.greenshadow.costbook.adapter.TracksAdapter;
 import com.greenshadow.costbook.provider.Constants;
+import com.greenshadow.costbook.utils.ColorUtils;
 import com.greenshadow.costbook.utils.Log;
 import com.greenshadow.costbook.view.EmptyRecyclerView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
@@ -32,7 +32,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
     public static final int WHAT_REFRESH_LIST = 101;
 
     private Toolbar mToolBar;
@@ -107,8 +107,21 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         mDrawerNavigation.setNavigationItemSelectedListener(menuItem -> {
-            Log.d(this, "'" + menuItem.getTitle() + "' selected");
-            return false;
+            switch (menuItem.getItemId()) {
+                case R.id.menu_theme:
+                    startActivity(new Intent(this, ThemeChooseActivity.class));
+                    break;
+                case R.id.menu_about:
+                    startActivity(new Intent(this, AboutActivity.class));
+                    break;
+                case R.id.menu_settings:
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    break;
+                default:
+                    return false;
+            }
+            mDrawer.closeDrawers();
+            return true;
         });
     }
 

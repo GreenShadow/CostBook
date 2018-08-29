@@ -21,7 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_toEndOf="@+id/leading_icon"
-        android:background="@drawable/bg_input_container">
+        android:background="@drawable/bg_input_container"
+        tools:background="#888">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -37,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:focusable="false"
-                android:textColor="@color/colorLabel"
+                android:textColor="?attr/colorLabel"
                 android:textSize="18sp"
                 tools:text="Rj" />
 
@@ -91,7 +92,7 @@
         android:layout_below="@+id/input_container"
         android:paddingEnd="12dp"
         android:paddingStart="12dp"
-        android:textColor="@color/colorLabel"
+        android:textColor="?attr/colorLabel"
         android:textSize="13sp"
         tools:text="note" />
 </merge>

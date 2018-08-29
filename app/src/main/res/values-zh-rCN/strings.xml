@@ -3,9 +3,15 @@
     <string name="app_name">账本</string>
     <string name="skip_into">跳过(%1d)</string>
 
+    <string name="about">关于</string>
+    <string name="theme">主题</string>
+    <string name="settings">设置</string>
+
+    <string name="open_source">开源地址</string>
+
     <string name="title_add_cost_ticket">添加记账</string>
     <string name="title_home">主页</string>
-    <string name="about">关于</string>
+
     <string name="cost_list_empty_notice">没有找到记录</string>
     <string name="are_you_sure">您确定吗？</string>
     <string name="delete_content">将要删除 \"%1s\"</string>
@@ -26,11 +32,17 @@
     <string name="number_format_error">不是合法的数字</string>
     <string name="add_failed">添加失败</string>
     <string name="add_success">添加成功</string>
-    <string name="cost_note">备注</string>
+    <string name="cost_note">备注：</string>
     <string name="stored_in_hint">*请不要在此输入您的私钥或助记符</string>
     <string name="save">保存</string>
     <string name="title_exist">标题 \"%1s\" 已存在</string>
 
     <string name="edit">编辑</string>
     <string name="delete">删除</string>
+
+    <string name="theme_light">粉色</string>
+    <string name="theme_dark">暗色</string>
+    <string name="theme_dark_amoled">AMOLED 暗色</string>
+
+    <string name="welcome_page">欢迎页</string>
 </resources>

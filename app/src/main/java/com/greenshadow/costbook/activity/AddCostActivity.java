@@ -11,12 +11,12 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.greenshadow.costbook.BuildConfig;
 import com.greenshadow.costbook.R;
 import com.greenshadow.costbook.adapter.IconSpinnerAdapter;
 import com.greenshadow.costbook.provider.Constants;
+import com.greenshadow.costbook.utils.ColorUtils;
 import com.greenshadow.costbook.utils.Log;
 import com.greenshadow.costbook.view.IconInputTextLayout;
 
@@ -27,10 +27,9 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class AddCostActivity extends AppCompatActivity {
+public class AddCostActivity extends BaseActivity {
     public static final String ACTION_ADD_THREAD = "com.greenshadow.costbook.activity.AddCostActivity.ACTION_ADD_THREAD";
     public static final String ACTION_ADD_RECORD = "com.greenshadow.costbook.activity.AddCostActivity.ACTION_ADD_RECORD";
     public static final String ACTION_EDIT_RECORD = "com.greenshadow.costbook.activity.AddCostActivity.ACTION_EDIT_RECORD";
@@ -103,7 +102,7 @@ public class AddCostActivity extends AppCompatActivity {
         if (action == null) {
             Log.e(this, "There should has an action when try to start AddCostActivity");
             if (BuildConfig.LOG_DEBUG) {
-                Toast.makeText(this, "no action", Toast.LENGTH_LONG).show();
+                toast("no action");
             }
             finish();
             return;
@@ -129,7 +128,7 @@ public class AddCostActivity extends AppCompatActivity {
                 if (id < 0) {
                     Log.e(this, "setupInputs : got edit action but invalid id!");
                     if (BuildConfig.LOG_DEBUG) {
-                        Toast.makeText(this, "Invalid ID", Toast.LENGTH_LONG).show();
+                        toast("Invalid ID");
                     }
                     finish();
                     return;
@@ -140,7 +139,7 @@ public class AddCostActivity extends AppCompatActivity {
             default:
                 Log.e(this, "unknown action " + action);
                 if (BuildConfig.LOG_DEBUG) {
-                    Toast.makeText(this, "Unknown action " + action, Toast.LENGTH_LONG).show();
+                    toast("Unknown action " + action);
                 }
                 finish();
                 break;
@@ -206,7 +205,7 @@ public class AddCostActivity extends AppCompatActivity {
             if (c == null || c.getCount() <= 0 || !c.moveToFirst()) {
                 Log.e(this, "Invalid cursor " + c);
                 if (BuildConfig.LOG_DEBUG) {
-                    Toast.makeText(this, "Error when query db", Toast.LENGTH_LONG).show();
+                    toast("Error when query db");
                 }
                 finish();
                 return;
@@ -223,7 +222,7 @@ public class AddCostActivity extends AppCompatActivity {
             } else {
                 Log.w(this, "Invalid selection " + currencySelection);
                 if (BuildConfig.LOG_DEBUG) {
-                    Toast.makeText(this, "Invalid currency selection", Toast.LENGTH_LONG).show();
+                    toast("Invalid currency selection");
                 }
                 finish();
                 return;
@@ -248,7 +247,7 @@ public class AddCostActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(this, "query error! Uri = " + recordUri, e);
             if (BuildConfig.LOG_DEBUG) {
-                Toast.makeText(this, "Query error", Toast.LENGTH_LONG).show();
+                toast("Query error");
             }
             finish();
             return;
@@ -420,10 +419,10 @@ public class AddCostActivity extends AppCompatActivity {
             Uri result = getContentResolver().insert(Constants.CostList.THREAD_URI, cv);
             if (result == null) {
                 Log.e(this, "insert error. cv = " + cv);
-                Toast.makeText(this, getString(R.string.add_failed), Toast.LENGTH_LONG).show();
+                toast(R.string.add_failed);
                 return false;
             } else {
-                Toast.makeText(this, getString(R.string.add_success), Toast.LENGTH_LONG).show();
+                toast(R.string.add_success);
             }
         }
 

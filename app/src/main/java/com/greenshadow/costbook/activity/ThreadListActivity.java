@@ -16,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.greenshadow.costbook.R;
 import com.greenshadow.costbook.adapter.ThreadAdapter;
 import com.greenshadow.costbook.provider.Constants;
+import com.greenshadow.costbook.utils.ColorUtils;
 import com.greenshadow.costbook.utils.Log;
 import com.greenshadow.costbook.view.EmptyRecyclerView;
 
@@ -23,19 +24,18 @@ import java.math.BigDecimal;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-public class ThreadListActivity extends AppCompatActivity {
+public class ThreadListActivity extends BaseActivity {
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_COST = "cost";
 
     public static final int WHAT_REFRESH_LIST = 100;
 
-    private Toolbar mToolbar;
+    private Toolbar mToolBar;
     private EmptyRecyclerView mList;
     private FloatingActionButton mFab;
 
@@ -68,8 +68,8 @@ public class ThreadListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_thread_list);
 
-        mToolbar = findViewById(R.id.tool_bar);
-        if (mToolbar != null) {
+        mToolBar = findViewById(R.id.tool_bar);
+        if (mToolBar != null) {
             setupToolBar();
         }
 
@@ -87,8 +87,8 @@ public class ThreadListActivity extends AppCompatActivity {
     }
 
     private void setupToolBar() {
-        mToolbar.setTitle(mTitle);
-        setSupportActionBar(mToolbar);
+        mToolBar.setTitle(mTitle);
+        setSupportActionBar(mToolBar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) {
             Log.w(this, "Action bar is null!");

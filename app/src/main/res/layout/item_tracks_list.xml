@@ -52,6 +52,6 @@
             android:id="@+id/cost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="BTC-CNY" />
+            tools:text="123456" />
     </LinearLayout>
 </RelativeLayout>

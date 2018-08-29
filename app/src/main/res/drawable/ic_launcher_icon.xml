@@ -4,7 +4,7 @@
     android:viewportHeight="1024"
     android:viewportWidth="1024">
     <path
-        android:fillColor="@color/colorPrimary"
+        android:fillColor="@color/colorAccent"
         android:pathData="
         M741.94,95.75
         h-415.98
@@ -21,7 +21,7 @@
         " />
 
     <path
-        android:fillColor="@color/colorAccent"
+        android:fillColor="@color/colorPrimary"
         android:pathData="
         M676.72,557.28
         c22.63,0,34.43,12.15,35.48,35.06,1.05,22.94,-10.84,37.15,-38.99,37.04,-16.1,-0.03,-92.89,-1.99,-92.89,-1.99
@@ -33,7 +33,7 @@
         " />
 
     <path
-        android:fillColor="@color/colorAccent"
+        android:fillColor="@color/colorPrimary"
         android:pathData="
         M396.4,561.4
         h96.41

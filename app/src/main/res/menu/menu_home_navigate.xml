@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/menu_theme"
+        android:icon="@null"
+        android:title="@string/theme" />
+
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@null"
+        android:title="@string/settings" />
+
+    <item
         android:id="@+id/menu_about"
         android:icon="@null"
         android:title="@string/about" />

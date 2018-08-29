@@ -50,21 +50,24 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:background="#CCCC"
+            android:background="@drawable/line_normal"
             android:orientation="vertical"
+            android:padding="4dp"
             android:visibility="gone"
             tools:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cost_note" />
+                android:text="@string/cost_note"
+                android:textColor="?attr/colorText" />
 
             <TextView
                 android:id="@+id/record_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@android:style/TextAppearance"
+                android:textColor="?attr/colorText"
                 tools:text="Note" />
         </LinearLayout>
 
@@ -73,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
-            android:paddingTop="8dp">
+            android:paddingTop="4dp">
 
             <Space
                 android:layout_width="wrap_content"
@@ -88,7 +91,6 @@
                 android:hapticFeedbackEnabled="true"
                 android:text="@string/edit"
                 android:textAllCaps="false"
-                android:theme="@style/AppTheme.TextInput"
                 app:icon="@drawable/ic_edit"
                 app:iconGravity="textStart"
                 app:iconSize="16dp" />
@@ -106,7 +108,6 @@
                 android:hapticFeedbackEnabled="true"
                 android:text="@string/delete"
                 android:textAllCaps="false"
-                android:theme="@style/AppTheme.TextInput"
                 app:icon="@drawable/ic_delete"
                 app:iconGravity="textStart"
                 app:iconSize="16dp" />

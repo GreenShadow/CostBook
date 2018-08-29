@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.google.android.material.animation.AnimationUtils;
 import com.greenshadow.costbook.R;
+import com.greenshadow.costbook.utils.ColorUtils;
 
 public class IconInputTextLayout extends RelativeLayout {
     private boolean mIsError = false;
@@ -33,6 +34,9 @@ public class IconInputTextLayout extends RelativeLayout {
     private String mErrorText;
 
     private float mLabelTranslationY;
+
+    private int mTextColor;
+    private int mErrorColor;
 
     private ImageView mLeadingIcon;
     private RelativeLayout mInputContainer;
@@ -83,6 +87,7 @@ public class IconInputTextLayout extends RelativeLayout {
 
         Drawable leadingIcon = ta.getDrawable(R.styleable.IconInputTextLayout_leading_icon);
         if (leadingIcon != null) {
+            leadingIcon.setTint(ColorUtils.getThemeColor(getContext(), R.attr.colorAccent));
             mLeadingIcon.setVisibility(VISIBLE);
             mLeadingIcon.setImageDrawable(leadingIcon);
         } else {
@@ -96,6 +101,13 @@ public class IconInputTextLayout extends RelativeLayout {
         } else {
             mTrailingIcon.setVisibility(GONE);
         }
+
+        mTextColor = ta.getColor(R.styleable.IconInputTextLayout_color_text,
+                ColorUtils.getThemeColor(getContext(), android.R.attr.textColorPrimary));
+        mInput.setTextColor(mTextColor);
+
+        mErrorColor = ta.getColor(R.styleable.IconInputTextLayout_color_error,
+                ColorUtils.getThemeColor(getContext(), R.attr.colorError));
 
         int inputType = ta.getInt(R.styleable.IconInputTextLayout_android_inputType, EditorInfo.TYPE_NULL);
         mInput.setInputType(inputType);
@@ -221,13 +233,13 @@ public class IconInputTextLayout extends RelativeLayout {
                     positionAnimator = ObjectAnimator.ofFloat(mLabel, "translationY", mLabelTranslationY * -1);
                     textSizeAnimator = ObjectAnimator.ofFloat(mLabel, "CurrentTextSize", 14);
                     textColorAnimator = ObjectAnimator.ofArgb(mLabel, "textColor",
-                            getThemeColor(R.attr.colorAccent));
+                            ColorUtils.getThemeColor(getContext(), R.attr.colorAccent));
                 } else {
                     positionAnimator = ObjectAnimator.ofFloat(mLabel, "translationY", 0);
                     textSizeAnimator = ObjectAnimator.ofFloat(mLabel, "CurrentTextSize",
                             mInput.getTextSize() / getResources().getDisplayMetrics().density);
                     textColorAnimator = ObjectAnimator.ofArgb(mLabel, "textColor",
-                            getContext().getResources().getColor(R.color.colorLabel));
+                            ColorUtils.getThemeColor(getContext(), R.attr.colorLabel));
                 }
 
                 AnimatorSet as = new AnimatorSet();
@@ -239,20 +251,14 @@ public class IconInputTextLayout extends RelativeLayout {
                 if (expand) {
                     mLabel.setTranslationY(mLabelTranslationY * -1);
                     mLabel.setCurrentTextSize(14);
-                    mLabel.setTextColor(getThemeColor(R.attr.colorAccent));
+                    mLabel.setTextColor(ColorUtils.getThemeColor(getContext(), R.attr.colorAccent));
                 } else {
                     mLabel.setTranslationY(0);
                     mLabel.setCurrentTextSize(mInput.getTextSize() / getResources().getDisplayMetrics().density);
-                    mLabel.setTextColor(getContext().getResources().getColor(R.color.colorLabel));
+                    mLabel.setTextColor(ColorUtils.getThemeColor(getContext(), R.attr.colorLabel));
                 }
             }
         });
-    }
-
-    private int getThemeColor(int id) {
-        TypedValue tv = new TypedValue();
-        getContext().getTheme().resolveAttribute(id, tv, true);
-        return tv.data;
     }
 
     public void setLabelAnimateEnabled(boolean enabled) {
@@ -266,14 +272,14 @@ public class IconInputTextLayout extends RelativeLayout {
         if (mIsError) {
             if (!TextUtils.isEmpty(mErrorText)) {
                 mAssistLabel.setVisibility(VISIBLE);
-                mAssistLabel.setTextColor(getThemeColor(R.attr.colorError));
+                mAssistLabel.setTextColor(mErrorColor);
                 mAssistLabel.setText(mErrorText);
             }
             mInputContainer.setBackgroundResource(R.drawable.line_error);
         } else {
             if (!TextUtils.isEmpty(mNoteText)) {
                 mAssistLabel.setVisibility(VISIBLE);
-                mAssistLabel.setTextColor(getThemeColor(R.attr.colorControlNormal));
+                mAssistLabel.setTextColor(mTextColor);
             }
             mInputContainer.setBackgroundResource(R.drawable.bg_input_container);
         }

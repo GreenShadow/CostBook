@@ -14,7 +14,7 @@
         <shape
             android:shape="rectangle"
             android:visible="true">
-            <solid android:color="#DDD" />
+            <solid android:color="?attr/colorInputField" />
             <corners
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="0dp"
