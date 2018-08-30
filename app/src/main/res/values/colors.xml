@@ -13,4 +13,6 @@
 
     <color name="colorLabel">#777</color>
     <color name="input_field_boxBackgroundColor">#EEE</color>
+    <color name="input_no_focus">#444</color>
+    <color name="input_no_focus_dark">#444</color>
 </resources>

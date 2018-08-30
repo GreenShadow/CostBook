@@ -10,22 +10,24 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
 import com.greenshadow.costbook.BuildConfig;
 import com.greenshadow.costbook.R;
-import com.greenshadow.costbook.adapter.IconSpinnerAdapter;
 import com.greenshadow.costbook.provider.Constants;
-import com.greenshadow.costbook.utils.ColorUtils;
 import com.greenshadow.costbook.utils.Log;
 import com.greenshadow.costbook.view.IconInputTextLayout;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
@@ -149,17 +151,26 @@ public class AddCostActivity extends BaseActivity {
     }
 
     private void setupSpinners() {
-        List<IconSpinnerAdapter.IconItem> prices = new ArrayList<>();
-        prices.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_unit_price, R.string.unit_price));
-        prices.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_total_price, R.string.total_price));
-        mPriceTypeView.setAdapter(new IconSpinnerAdapter(this, prices));
+        ArrayList<Map<String, Object>> prices = new ArrayList<>();
+        prices.add(buildItem(R.drawable.ic_unit_price, R.string.unit_price));
+        prices.add(buildItem(R.drawable.ic_total_price, R.string.total_price));
+        mPriceTypeView.setAdapter(new SimpleAdapter(this, prices, R.layout.item_icon_spinner,
+                new String[]{ "icon", "title" }, new int[]{ R.id.icon, R.id.text }));
 
-        List<IconSpinnerAdapter.IconItem> currencies = new ArrayList<>();
-        currencies.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_cny, R.string.currency_cny));
-        currencies.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_btc, R.string.currency_btc));
-        currencies.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_eth, R.string.currency_eth));
-        currencies.add(new IconSpinnerAdapter.IconItem(R.drawable.ic_usdt, R.string.currency_usdt));
-        mCurrencyTypeView.setAdapter(new IconSpinnerAdapter(this, currencies));
+        ArrayList<Map<String, Object>> currencies = new ArrayList<>();
+        currencies.add(buildItem(R.drawable.ic_cny, R.string.currency_cny));
+        currencies.add(buildItem(R.drawable.ic_btc, R.string.currency_btc));
+        currencies.add(buildItem(R.drawable.ic_eth, R.string.currency_eth));
+        currencies.add(buildItem(R.drawable.ic_usdt, R.string.currency_usdt));
+        mCurrencyTypeView.setAdapter(new SimpleAdapter(this, currencies, R.layout.item_icon_spinner,
+                new String[]{ "icon", "title" }, new int[]{ R.id.icon, R.id.text }));
+    }
+
+    private Map<String, Object> buildItem(@DrawableRes int icon, @StringRes int string) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("icon", icon);
+        result.put("title", getString(string));
+        return result;
     }
 
     private void enterRecordMode() {

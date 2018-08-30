@@ -58,7 +58,7 @@ public class CostBookApp extends Application {
     public Resources.Theme getTheme() {
         Resources.Theme theme = super.getTheme();
 
-        String themeName = getSharedPreferences().getString(PREF_KEY_THEME_NAME, "");
+        String themeName = getSharedPreferences().getString(PREF_KEY_THEME_NAME, DEFAULT_THEME_NAME);
         if (TextUtils.isEmpty(themeName)) {
             return theme;
         }
@@ -73,12 +73,14 @@ public class CostBookApp extends Application {
             case THEME_DARK_AMOLED:
                 theme.applyStyle(R.style.AppTheme_Dark_Amoled, true);
                 break;
+            default:
+                break;
         }
         return theme;
     }
 
     public int getSavedTheme() {
-        String themeName = getSharedPreferences().getString(PREF_KEY_THEME_NAME, "");
+        String themeName = getSharedPreferences().getString(PREF_KEY_THEME_NAME, DEFAULT_THEME_NAME);
         if (TextUtils.isEmpty(themeName)) {
             return R.style.AppTheme;
         }

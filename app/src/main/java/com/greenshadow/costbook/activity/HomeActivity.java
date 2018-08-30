@@ -17,7 +17,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.greenshadow.costbook.R;
 import com.greenshadow.costbook.adapter.TracksAdapter;
 import com.greenshadow.costbook.provider.Constants;
-import com.greenshadow.costbook.utils.ColorUtils;
 import com.greenshadow.costbook.utils.Log;
 import com.greenshadow.costbook.view.EmptyRecyclerView;
 

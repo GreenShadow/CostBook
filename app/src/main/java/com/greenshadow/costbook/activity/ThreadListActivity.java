@@ -16,26 +16,22 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.greenshadow.costbook.R;
 import com.greenshadow.costbook.adapter.ThreadAdapter;
 import com.greenshadow.costbook.provider.Constants;
-import com.greenshadow.costbook.utils.ColorUtils;
 import com.greenshadow.costbook.utils.Log;
 import com.greenshadow.costbook.view.EmptyRecyclerView;
 
 import java.math.BigDecimal;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-public class ThreadListActivity extends BaseActivity {
+public class ThreadListActivity extends BaseToolBarBackActivity {
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_COST = "cost";
 
     public static final int WHAT_REFRESH_LIST = 100;
 
-    private Toolbar mToolBar;
     private EmptyRecyclerView mList;
     private FloatingActionButton mFab;
 
@@ -58,21 +54,22 @@ public class ThreadListActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         mTitle = getIntent().getStringExtra(EXTRA_TITLE);
         if (TextUtils.isEmpty(mTitle)) {
             finish();
             return;
         }
 
-        setContentView(R.layout.activity_thread_list);
+        super.onCreate(savedInstanceState);
+    }
 
-        mToolBar = findViewById(R.id.tool_bar);
-        if (mToolBar != null) {
-            setupToolBar();
-        }
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.activity_thread_list;
+    }
 
+    @Override
+    protected void initViews() {
         setUpCost();
 
         mList = findViewById(R.id.thread_list);
@@ -84,17 +81,6 @@ public class ThreadListActivity extends BaseActivity {
         if (mFab != null) {
             setupFab();
         }
-    }
-
-    private void setupToolBar() {
-        mToolBar.setTitle(mTitle);
-        setSupportActionBar(mToolBar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) {
-            Log.w(this, "Action bar is null!");
-            return;
-        }
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void setUpCost() {

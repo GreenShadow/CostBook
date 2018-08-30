@@ -9,14 +9,12 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,11 +36,11 @@ public class IconInputTextLayout extends RelativeLayout {
     private int mTextColor;
     private int mErrorColor;
 
-    private ImageView mLeadingIcon;
+    private TintAnimateImageView mLeadingIcon;
     private RelativeLayout mInputContainer;
     private TextSizeAnimateTextView mLabel;
     private EditText mInput;
-    private ImageView mTrailingIcon;
+    private TintAnimateImageView mTrailingIcon;
     private TextView mAssistLabel;
 
     private InputMethodManager mImm;
@@ -88,6 +86,7 @@ public class IconInputTextLayout extends RelativeLayout {
         Drawable leadingIcon = ta.getDrawable(R.styleable.IconInputTextLayout_leading_icon);
         if (leadingIcon != null) {
             leadingIcon.setTint(ColorUtils.getThemeColor(getContext(), R.attr.colorAccent));
+            mLeadingIcon.setTint(ColorUtils.getThemeColor(getContext(), R.attr.colorIconNoFocus));
             mLeadingIcon.setVisibility(VISIBLE);
             mLeadingIcon.setImageDrawable(leadingIcon);
         } else {
@@ -96,6 +95,7 @@ public class IconInputTextLayout extends RelativeLayout {
 
         Drawable trailingIcon = ta.getDrawable(R.styleable.IconInputTextLayout_trailing_icon);
         if (trailingIcon != null) {
+            mTrailingIcon.setTint(ColorUtils.getThemeColor(getContext(), R.attr.colorIconNoFocus));
             mTrailingIcon.setVisibility(VISIBLE);
             mTrailingIcon.setImageDrawable(trailingIcon);
         } else {
@@ -229,23 +229,28 @@ public class IconInputTextLayout extends RelativeLayout {
                 ObjectAnimator positionAnimator;
                 ObjectAnimator textSizeAnimator;
                 ObjectAnimator textColorAnimator;
+                ObjectAnimator tintAnimator;
                 if (expand) {
                     positionAnimator = ObjectAnimator.ofFloat(mLabel, "translationY", mLabelTranslationY * -1);
                     textSizeAnimator = ObjectAnimator.ofFloat(mLabel, "CurrentTextSize", 14);
                     textColorAnimator = ObjectAnimator.ofArgb(mLabel, "textColor",
                             ColorUtils.getThemeColor(getContext(), R.attr.colorAccent));
+                    tintAnimator = ObjectAnimator.ofArgb(mLeadingIcon, "tint",
+                            ColorUtils.getThemeColor(getContext(), R.attr.colorIcon));
                 } else {
                     positionAnimator = ObjectAnimator.ofFloat(mLabel, "translationY", 0);
                     textSizeAnimator = ObjectAnimator.ofFloat(mLabel, "CurrentTextSize",
                             mInput.getTextSize() / getResources().getDisplayMetrics().density);
                     textColorAnimator = ObjectAnimator.ofArgb(mLabel, "textColor",
                             ColorUtils.getThemeColor(getContext(), R.attr.colorLabel));
+                    tintAnimator = ObjectAnimator.ofArgb(mLeadingIcon, "tint",
+                            ColorUtils.getThemeColor(getContext(), R.attr.colorIconNoFocus));
                 }
 
                 AnimatorSet as = new AnimatorSet();
                 as.setDuration(300);
                 as.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
-                as.playTogether(positionAnimator, textSizeAnimator, textColorAnimator);
+                as.playTogether(positionAnimator, textSizeAnimator, textColorAnimator, tintAnimator);
                 as.start();
             } else {
                 if (expand) {

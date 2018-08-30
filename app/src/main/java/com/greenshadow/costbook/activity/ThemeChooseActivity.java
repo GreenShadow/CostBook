@@ -7,24 +7,19 @@ import android.view.View;
 
 import com.greenshadow.costbook.R;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-
-public class ThemeChooseActivity extends BaseActivity {
+public class ThemeChooseActivity extends BaseToolBarBackActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_theme_choose);
+    }
 
-        Toolbar toolbar = findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null) {
-            return;
-        }
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.activity_theme_choose;
+    }
 
+    @Override
+    protected void initViews() {
         findViewById(R.id.theme_light).setOnClickListener(this::onClick);
         findViewById(R.id.theme_dark).setOnClickListener(this::onClick);
         findViewById(R.id.theme_dark_amoled).setOnClickListener(this::onClick);

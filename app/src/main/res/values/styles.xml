@@ -18,6 +18,7 @@
         <item name="colorTextTitle">@color/colorPrimary</item>
         <item name="colorLabel">@color/colorLabel</item>
         <item name="colorIcon">@color/colorAccent</item>
+        <item name="colorIconNoFocus">@color/colorInputField</item>
         <item name="colorListDivider">#BDBDBD</item>
     </style>
 
@@ -37,6 +38,7 @@
         <item name="colorTextTitle">@color/colorPrimary_dark</item>
         <item name="colorLabel">@color/colorLabel</item>
         <item name="colorIcon">@color/colorAccent</item>
+        <item name="colorIconNoFocus">@color/colorInputField</item>
         <item name="colorListDivider">#8888</item>
     </style>
 
@@ -53,7 +55,8 @@
     </style>
 
     <style name="AppTheme.Into" parent="AppTheme">
-        <item name="android:windowBackground">@color/colorAccent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.Dialog" parent="android:Theme.Material.Dialog">

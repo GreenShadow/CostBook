@@ -50,6 +50,19 @@ public class IntoActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        switch (getApp().getSavedTheme()) {
+            case R.style.AppTheme_Dark:
+                getWindow().setBackgroundDrawableResource(R.color.colorAccent_dark);
+                break;
+            case R.style.AppTheme_Dark_Amoled:
+                getWindow().setBackgroundDrawableResource(R.color.amoled_dark);
+                break;
+            case R.style.AppTheme:
+            default:
+                getWindow().setBackgroundDrawableResource(R.color.colorAccent);
+                break;
+        }
+
         super.onCreate(savedInstanceState);
         boolean enable = getSharedPreferences().getBoolean(CostBookApp.PREF_KEY_WELCOME_PAGE,
                 CostBookApp.DEFAULT_WELCOME_ENABLE);

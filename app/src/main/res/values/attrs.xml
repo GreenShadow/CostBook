@@ -28,6 +28,7 @@
         <attr name="colorLabel" format="color" />
 
         <attr name="colorIcon" format="color" />
+        <attr name="colorIconNoFocus" format="color" />
 
         <attr name="colorListDivider" format="color" />
     </declare-styleable>
