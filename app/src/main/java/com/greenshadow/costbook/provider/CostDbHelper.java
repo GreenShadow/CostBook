@@ -76,7 +76,7 @@ public class CostDbHelper extends SQLiteOpenHelper {
         // Add downgrade logic here in future.
 
         if (currentVersion == 2) {
-            String copy = "CREATE TABLE " + Constants.TABLE_COST_TMP + " AS SELECT " +
+            String sql = "CREATE TABLE " + Constants.TABLE_COST_TMP + " AS SELECT " +
                     Constants.CostList._ID + "          , " +
                     Constants.CostList.TITLE + "        , " +
                     Constants.CostList.TOTAL + "        , " +
@@ -85,20 +85,15 @@ public class CostDbHelper extends SQLiteOpenHelper {
                     Constants.CostList.BUY_TIME + "     , " +
                     Constants.CostList.NOTE + "         , " +
                     Constants.CostList.TIME + "         FROM " +
-                    Constants.TABLE_COST;
-            db.execSQL(copy);
-
-            String drop = "DROP TABLE IF EXISTS " + Constants.TABLE_COST;
-            db.execSQL(drop);
-
-            String rename = "ALTER TABLE " + Constants.TABLE_COST_TMP +
-                    " RENAME TO " + Constants.TABLE_COST;
-            db.execSQL(rename);
+                    Constants.TABLE_COST + "            ;" +
+                    "\n" +
+                    "DROP TABLE IF EXISTS " + Constants.TABLE_COST + ";" +
+                    "\n" +
+                    "ALTER TABLE " + Constants.TABLE_COST_TMP + " RENAME TO " + Constants.TABLE_COST + ";";
+            db.execSQL(sql);
 
             if (BuildConfig.LOG_DEBUG) {
-                Log.d(this, "copy = " + copy);
-                Log.d(this, "drop = " + drop);
-                Log.d(this, "rename = " + rename);
+                Log.d(this, "sql = " + sql);
             }
 
             currentVersion--;

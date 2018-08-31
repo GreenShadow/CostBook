@@ -22,8 +22,6 @@ import com.greenshadow.costbook.view.EmptyRecyclerView;
 import java.math.BigDecimal;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class ThreadListActivity extends BaseToolBarBackActivity {
@@ -122,9 +120,6 @@ public class ThreadListActivity extends BaseToolBarBackActivity {
         mList.setEmptyView(findViewById(R.id.thread_list_empty));
         mList.setAdapter(mAdapter);
         mList.setLayoutManager(new LinearLayoutManager(this));
-        DividerItemDecoration decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        decoration.setDrawable(ContextCompat.getDrawable(this, R.drawable.recycler_decoration));
-        mList.addItemDecoration(decoration);
     }
 
     private void setupFab() {
@@ -198,8 +193,16 @@ public class ThreadListActivity extends BaseToolBarBackActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        mAdapter.onActivityStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         if (mCursor != null && !mCursor.isClosed()) {
             mCursor.close();
+            mCursor = null;
         }
+        mAdapter.changeCursor(null);
     }
 }
