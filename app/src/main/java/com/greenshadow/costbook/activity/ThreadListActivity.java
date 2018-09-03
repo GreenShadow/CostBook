@@ -26,7 +26,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class ThreadListActivity extends BaseToolBarBackActivity {
     public static final String EXTRA_TITLE = "title";
-    public static final String EXTRA_COST = "cost";
 
     public static final int WHAT_REFRESH_LIST = 100;
 
@@ -42,7 +41,7 @@ public class ThreadListActivity extends BaseToolBarBackActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case WHAT_REFRESH_LIST:
-                    refreshList();
+                    refreshData();
                     break;
                 default:
                     break;
@@ -68,8 +67,6 @@ public class ThreadListActivity extends BaseToolBarBackActivity {
 
     @Override
     protected void initViews() {
-        setUpCost();
-
         mList = findViewById(R.id.thread_list);
         if (mList != null) {
             setupList();
@@ -81,8 +78,7 @@ public class ThreadListActivity extends BaseToolBarBackActivity {
         }
     }
 
-    private void setUpCost() {
-        String costString = getIntent().getStringExtra(EXTRA_COST);
+    private void setUpCost(String costString) {
         if (TextUtils.isEmpty(costString)) {
             findViewById(R.id.cost_panel).setVisibility(View.GONE);
             return;
@@ -133,7 +129,21 @@ public class ThreadListActivity extends BaseToolBarBackActivity {
         mHandler.sendEmptyMessage(WHAT_REFRESH_LIST);
     }
 
-    private void refreshList() {
+    private void refreshData() {
+        Uri getCost = Uri.withAppendedPath(Constants.CostList.TRACKS_COST_URI, mTitle);
+        try (Cursor cost = getContentResolver().query(getCost, null, null, null, null)) {
+            if (cost != null && cost.moveToFirst()) {
+                String costString = cost.getString(cost.getColumnIndex(Constants.CostList.PRICE_SUM));
+                setUpCost(costString);
+            } else {
+                Log.e(this, "cursor error, cursor = " + cost);
+                setUpCost(null);
+            }
+        } catch (Exception e) {
+            Log.e(this, "refreshData : query cost error");
+            setUpCost(null);
+        }
+
         Uri getThreads = Uri.withAppendedPath(Constants.CostList.THREAD_URI, mTitle);
         try {
             mCursor = getContentResolver().query(getThreads, null, null,
@@ -145,7 +155,7 @@ public class ThreadListActivity extends BaseToolBarBackActivity {
             }
             mAdapter.changeCursor(mCursor);
         } catch (Exception e) {
-            Log.e(this, "setupList : init adapter error", e);
+            Log.e(this, "refreshData : init adapter error", e);
         }
     }
 

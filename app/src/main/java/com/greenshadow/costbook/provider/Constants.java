@@ -15,6 +15,7 @@ public interface Constants {
 
         Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
         Uri TRACKS_URI = Uri.withAppendedPath(CONTENT_URI, "tracks");
+        Uri TRACKS_COST_URI = Uri.withAppendedPath(TRACKS_URI, "cost");
         Uri THREAD_URI = Uri.withAppendedPath(CONTENT_URI, "thread");
         Uri RECORD_URI = Uri.withAppendedPath(CONTENT_URI, "record");
 

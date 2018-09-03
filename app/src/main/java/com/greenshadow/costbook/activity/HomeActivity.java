@@ -147,8 +147,13 @@ public class HomeActivity extends BaseActivity {
 
     private void refreshList() {
         mCursor = getContentResolver().query(Constants.CostList.TRACKS_URI,
-                new String[]{ "*", "SUM(price) AS " + Constants.CostList.PRICE_SUM },
-                null, null, Constants.CostList.TIME);
+                new String[]{
+                        Constants.CostList._ID,
+                        Constants.CostList.CURRENCY_TYPE,
+                        Constants.CostList.TITLE,
+                        "SUM(price) AS " + Constants.CostList.PRICE_SUM,
+                },
+                null, null, Constants.CostList.TIME + " DESC");
         mAdapter.changeCursor(mCursor);
     }
 

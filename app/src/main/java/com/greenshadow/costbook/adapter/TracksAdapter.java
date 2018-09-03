@@ -42,66 +42,12 @@ public class TracksAdapter extends AbsCursorRecyclerAdapter<TracksAdapter.Cursor
     @Override
     public CursorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item = LayoutInflater.from(mContext).inflate(R.layout.item_tracks_list, parent, false);
-        return new CursorViewHolder(item, viewType);
+        return new CursorViewHolder(item);
     }
 
     @Override
     public void onBindViewHolder(CursorViewHolder holder, Cursor cursor) {
-        int currencyType = cursor.getInt(cursor.getColumnIndex(Constants.CostList.CURRENCY_TYPE));
-        holder.mIcon.setImageDrawable(getIcon(mContext, currencyType));
-
-        String title = cursor.getString(cursor.getColumnIndex(Constants.CostList.TITLE));
-        holder.mTitle.setText(title);
-
-        String priceText = cursor.getString(cursor.getColumnIndex(Constants.CostList.PRICE_SUM));
-        BigDecimal priceNum = null;
-        try {
-            priceNum = new BigDecimal(priceText);
-        } catch (NumberFormatException e) {
-            Log.w(this, "Format number error!", e);
-        }
-
-        if (priceNum != null) {
-            if (priceNum.compareTo(BigDecimal.ZERO) > 0) {
-                holder.mStatus.setText(R.string.cost);
-                holder.mStatus.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
-                holder.mCost.setText(priceNum.toPlainString());
-                holder.mCost.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
-            } else {
-                holder.mStatus.setText(R.string.profit);
-                holder.mStatus.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_dark));
-                holder.mCost.setText(priceNum.abs().toPlainString());
-                holder.mCost.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_dark));
-            }
-        } else {
-            holder.mStatus.setVisibility(View.GONE);
-            holder.mCost.setText(priceText);
-            holder.mCost.setTextColor(mContext.getResources().getColor(android.R.color.primary_text_light));
-        }
-
-        holder.mItem.setHapticFeedbackEnabled(true);
-        holder.mItem.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-
-        holder.mItem.setOnClickListener(v -> {
-            Intent i = new Intent(mContext, ThreadListActivity.class);
-            i.putExtra(ThreadListActivity.EXTRA_TITLE, title);
-            i.putExtra(ThreadListActivity.EXTRA_COST, priceText);
-            mContext.startActivity(i);
-        });
-
-        holder.mItem.setOnLongClickListener(v -> {
-            PopupMenu menu = new PopupMenu(mContext, v, Gravity.END);
-            menu.inflate(R.menu.delete_menu);
-            menu.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == R.id.menu_delete) {
-                    tryDeleteRow(title);
-                    return true;
-                }
-                return false;
-            });
-            menu.show();
-            return true;
-        });
+        holder.bind(cursor);
     }
 
     private void tryDeleteRow(String title) {
@@ -149,14 +95,14 @@ public class TracksAdapter extends AbsCursorRecyclerAdapter<TracksAdapter.Cursor
         }
     }
 
-    public class CursorViewHolder extends RecyclerView.ViewHolder {
+    class CursorViewHolder extends RecyclerView.ViewHolder {
         private View mItem;
         private ImageView mIcon;
         private TextView mTitle;
         private TextView mStatus;
         private TextView mCost;
 
-        public CursorViewHolder(View itemView, int viewType) {
+        CursorViewHolder(View itemView) {
             super(itemView);
 
             mItem = itemView;
@@ -164,6 +110,63 @@ public class TracksAdapter extends AbsCursorRecyclerAdapter<TracksAdapter.Cursor
             mTitle = itemView.findViewById(R.id.title);
             mStatus = itemView.findViewById(R.id.status);
             mCost = itemView.findViewById(R.id.cost);
+        }
+
+        private void bind(Cursor cursor) {
+            int currencyType = cursor.getInt(cursor.getColumnIndex(Constants.CostList.CURRENCY_TYPE));
+            mIcon.setImageDrawable(getIcon(mContext, currencyType));
+
+            String title = cursor.getString(cursor.getColumnIndex(Constants.CostList.TITLE));
+            mTitle.setText(title);
+
+            String priceText = cursor.getString(cursor.getColumnIndex(Constants.CostList.PRICE_SUM));
+            BigDecimal priceNum = null;
+            try {
+                priceNum = new BigDecimal(priceText);
+            } catch (NumberFormatException e) {
+                Log.w(this, "Format number error!", e);
+            }
+
+            if (priceNum != null) {
+                if (priceNum.compareTo(BigDecimal.ZERO) > 0) {
+                    mStatus.setText(R.string.cost);
+                    mStatus.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
+                    mCost.setText(priceNum.toPlainString());
+                    mCost.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
+                } else {
+                    mStatus.setText(R.string.profit);
+                    mStatus.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_dark));
+                    mCost.setText(priceNum.abs().toPlainString());
+                    mCost.setTextColor(mContext.getResources().getColor(android.R.color.holo_green_dark));
+                }
+            } else {
+                mStatus.setVisibility(View.GONE);
+                mCost.setText(priceText);
+                mCost.setTextColor(mContext.getResources().getColor(android.R.color.primary_text_light));
+            }
+
+            mItem.setHapticFeedbackEnabled(true);
+            mItem.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+
+            mItem.setOnClickListener(v -> {
+                Intent i = new Intent(mContext, ThreadListActivity.class);
+                i.putExtra(ThreadListActivity.EXTRA_TITLE, title);
+                mContext.startActivity(i);
+            });
+
+            mItem.setOnLongClickListener(v -> {
+                PopupMenu menu = new PopupMenu(mContext, v, Gravity.END);
+                menu.inflate(R.menu.delete_menu);
+                menu.setOnMenuItemClickListener(item -> {
+                    if (item.getItemId() == R.id.menu_delete) {
+                        tryDeleteRow(title);
+                        return true;
+                    }
+                    return false;
+                });
+                menu.show();
+                return true;
+            });
         }
     }
 }

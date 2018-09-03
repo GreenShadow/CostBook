@@ -1,75 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tool_bar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimaryDark"
-        android:elevation="@dimen/default_elevation"
-        android:fitsSystemWindows="true"
-        app:theme="@style/AppTheme.ToolBar"
-        app:titleTextColor="?attr/colorTextTitle" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/cost_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
-        android:padding="8dp">
-
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/cost"
-            tools:text="Cost" />
-
-        <TextView
-            android:id="@+id/cost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            tools:text="123" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.greenshadow.costbook.view.EmptyRecyclerView
-            android:id="@+id/thread_list"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tool_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimaryDark"
+            android:elevation="@dimen/default_elevation"
+            android:fitsSystemWindows="true"
+            app:theme="@style/AppTheme.ToolBar"
+            app:titleTextColor="?attr/colorTextTitle" />
 
-        <TextView
-            android:id="@+id/thread_list_empty"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/cost_panel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cost_list_empty_notice"
-            android:visibility="gone" />
+            android:background="@android:color/darker_gray"
+            android:padding="8dp">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_add_record"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/default_margin"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_add"
-            app:backgroundTint="?attr/colorAccent"
-            app:elevation="@dimen/default_elevation"
-            app:fabSize="normal"
-            app:rippleColor="#FFF" />
-    </RelativeLayout>
-</LinearLayout>
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/cost"
+                tools:text="Cost" />
+
+            <TextView
+                android:id="@+id/cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                tools:text="123" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.greenshadow.costbook.view.EmptyRecyclerView
+                android:id="@+id/thread_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/thread_list_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cost_list_empty_notice"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/default_margin"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="?attr/colorAccent"
+        app:elevation="@dimen/default_elevation"
+        app:fabSize="normal"
+        app:layout_behavior="@string/fab_behavior"
+        app:rippleColor="#FFF" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -17,16 +17,16 @@ import com.greenshadow.costbook.utils.Log;
 
 public class CostListProvider extends ContentProvider {
     private static final int TRACKS = 0;
-    private static final int THREAD = 1;
-    private static final int THREAD_LIST = 2;
+    private static final int TRACK_COST = 1;
+    private static final int THREAD = 2;
     private static final int RECORD = 3;
 
     private static UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
         sUriMatcher.addURI(Constants.CostList.AUTHORITY, "tracks", TRACKS);
-        sUriMatcher.addURI(Constants.CostList.AUTHORITY, "thread", THREAD);
-        sUriMatcher.addURI(Constants.CostList.AUTHORITY, "thread/*", THREAD_LIST);
+        sUriMatcher.addURI(Constants.CostList.AUTHORITY, "tracks/cost/*", TRACK_COST);
+        sUriMatcher.addURI(Constants.CostList.AUTHORITY, "thread/*", THREAD);
         sUriMatcher.addURI(Constants.CostList.AUTHORITY, "record/#", RECORD);
     }
 
@@ -49,7 +49,12 @@ public class CostListProvider extends ContentProvider {
             case TRACKS:
                 groupBy = Constants.CostList.TITLE;
                 break;
-            case THREAD_LIST:
+            case TRACK_COST:
+                projection = new String[]{ "SUM(price) AS " + Constants.CostList.PRICE_SUM };
+                selection = Constants.CostList.TITLE + "=?";
+                selectionArgs = new String[]{ uri.getLastPathSegment() };
+                break;
+            case THREAD:
                 selection = Constants.CostList.TITLE + "=?";
                 selectionArgs = new String[]{ uri.getLastPathSegment() };
                 break;
@@ -96,7 +101,7 @@ public class CostListProvider extends ContentProvider {
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         int match = sUriMatcher.match(uri);
         switch (match) {
-            case THREAD_LIST:
+            case THREAD:
                 selection = Constants.CostList.TITLE + "=?";
                 selectionArgs = new String[]{ uri.getLastPathSegment() };
                 break;
@@ -117,8 +122,6 @@ public class CostListProvider extends ContentProvider {
             @Nullable String[] selectionArgs) {
         int match = sUriMatcher.match(uri);
         switch (match) {
-            case THREAD_LIST:
-                break;
             case RECORD:
                 selection = Constants.CostList._ID + "=?";
                 selectionArgs = new String[]{ uri.getLastPathSegment() };

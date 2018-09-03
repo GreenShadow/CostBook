@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="github_url" translatable="false">https://github.com/GreenShadow/CostBook</string>
+    <string name="version_prefix" translatable="false">v&#160;</string>
+    <string name="currency_cny" translatable="false">CNY</string>
+    <string name="currency_btc" translatable="false">BTC</string>
+    <string name="currency_eth" translatable="false">ETH</string>
+    <string name="currency_usdt" translatable="false">USDT</string>
+    <string name="fab_behavior" translatable="false">com.greenshadow.costbook.view.DefaultFabBehavior</string>
+</resources>
